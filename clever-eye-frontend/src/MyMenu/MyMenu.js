@@ -9,7 +9,8 @@ class MyMenu extends Component{
     constructor(props){
       super(props)
       this.state = {
-        current: 'mail'
+          theme: 'dark',
+        current: 'mail',
       }
     }
     
@@ -28,24 +29,14 @@ class MyMenu extends Component{
               mode="horizontal"
             >
               <Menu.Item key="home">
-                <Link to='/'><Icon type="home" />Home</Link>
+                <Link to='/home'><Icon type="home" />首页</Link>
               </Menu.Item>
               <Menu.Item key="layout">
-                <Link to='/layout'><Icon type="appstore" />Layout</Link>
+                <Link to='/layout'><Icon type="eye" />实时监控</Link>
               </Menu.Item>
-              <SubMenu title={<span><Icon type="setting" />Navigation Three - Submenu</span>}>
-                <MenuItemGroup title="Item 1">
-                  <Menu.Item key="setting:1">Option 1</Menu.Item>
-                  <Menu.Item key="setting:2">Option 2</Menu.Item>
-                </MenuItemGroup>
-                <MenuItemGroup title="Item 2">
-                  <Menu.Item key="setting:3">Option 3</Menu.Item>
-                  <Menu.Item key="setting:4">Option 4</Menu.Item>
-                </MenuItemGroup>
-              </SubMenu>
-              <Menu.Item key="alipay">
-                <a href="https://ant.design" target="_blank" rel="noopener noreferrer">Navigation Four - Link</a>
-              </Menu.Item>
+            <Menu.Item key="search">
+                <Link to='/layout'><Icon type="search" />搜寻</Link>
+            </Menu.Item>
             </Menu>
       )
     }
