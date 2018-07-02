@@ -8,7 +8,8 @@ docker run -it -p 1935:1935 -p 8080:80 --rm alfg/nginx-rtmp
 - ffmpeg live command for mac:
 
 ```sh
-ffmpeg -f avfoundation -framerate 30 -i "0" -target pal-vcd ./hello.mpg -f flv rtmp://{server-ip}/stream/{instance-name}```
+ffmpeg -f avfoundation -framerate 30 -i "0" -target pal-vcd ./hello.mpg -f flv rtmp://{server-ip}/stream/{instance-name}
+```
 
 - HLS url:
 
