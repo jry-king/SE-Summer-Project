@@ -1391,7 +1391,7 @@ Here is an example from Enzyme documentation that asserts specific output, rewri
 ```js
 import React from 'react';
 import { shallow } from 'enzyme';
-import App from './App';
+import App from Home;
 
 it('renders welcome message', () => {
   const wrapper = shallow(<App />);
