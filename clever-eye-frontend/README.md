@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+- ffmpeg live command for mac:
+<code> 
+ffmpeg -f avfoundation -framerate 30 -i "0" -target pal-vcd ./hello.mpg -f flv rtmp://{server-ip}/stream/{instance-name}
+</code>
+- HLS url:
+<code>
+http://{server-ip}/live/{instance-name + '.m3u8'}
+</code>
+=======
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
@@ -2442,3 +2452,4 @@ In the future, we might start automatically compiling incompatible third-party m
 ## Something Missing?
 
 If you have ideas for more “How To” recipes that should be on this page, [let us know](https://github.com/facebookincubator/create-react-app/issues) or [contribute some!](https://github.com/facebookincubator/create-react-app/edit/master/packages/react-scripts/template/README.md)
+>>>>>>> upstream/master
