@@ -3,6 +3,13 @@
   <groupId>com.sjtu.group6</groupId>
   <artifactId>tracking</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+       <exec.mainClass>HelloTF</exec.mainClass>
+       <!-- The sample code requires at least JDK 1.7. -->
+       <!-- The maven compiler plugin defaults to a lower version -->
+       <maven.compiler.source>1.7</maven.compiler.source>
+       <maven.compiler.target>1.7</maven.compiler.target>
+     </properties>
   <dependencies>
        <dependency>
          <groupId>org.tensorflow</groupId>
