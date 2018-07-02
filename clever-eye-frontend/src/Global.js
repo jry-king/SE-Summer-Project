@@ -1,0 +1,1 @@
+export const hlsServer="http://47.106.8.44:8080/live/"
