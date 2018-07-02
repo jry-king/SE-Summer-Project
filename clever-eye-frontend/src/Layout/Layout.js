@@ -3,7 +3,7 @@ import Camera from './Camera'
 import {hlsServer} from '../Global'
 import { Select } from 'antd';
 
-const cameras = [{key:1, x:'10%', y:'10%', url:'/camera1'}, {key:2, x:'30%',y:'30%',url:'/camera2'}]
+const cameras = [{key:1, x:'10%', y:'10%', url:'camera1'}, {key:2, x:'30%',y:'30%',url:'camera2'}]
 
 const Option = Select.Option;
 
@@ -36,7 +36,7 @@ class Layout extends Component {
                         <Option value="camera3">摄像头3</Option>
                     </Select>
                 </div>
-
+                
                 <div className="layout-container" style={style}>
                 {
                     cameras.map((camera) => {
@@ -44,10 +44,13 @@ class Layout extends Component {
                     })
                 }
                 </div>
-                <video id="my_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="268" 
-                data-setup='{}'>
-                    <source src={hlsServer + this.state.toPlay +".m3u8"} type="application/x-mpegURL"/>
-                </video>
+                
+                <div className="video-container">
+                    <video id="my_video_1" className="video-js vjs-default-skin" controls preload="auto" width="640" height="268" 
+                    data-setup='{}'>
+                        <source src={hlsServer + this.state.toPlay +".m3u8"} type="application/x-mpegURL"/>
+                    </video>
+                </div>
             </div>
         )
     }
