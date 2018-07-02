@@ -1,10 +1,18 @@
 import React, { Component } from 'react';
 import Camera from './Camera'
 import {hlsServer} from '../Global'
+import { Select } from 'antd';
 
 const cameras = [{key:1, x:'10%', y:'10%', url:'/camera1'}, {key:2, x:'30%',y:'30%',url:'/camera2'}]
 
+const Option = Select.Option;
+
+function handleChange(value) {
+    console.log(`selected ${value}`);
+}
+
 class Layout extends Component {
+
     constructor(props){
         super(props)
         this.state={
@@ -19,7 +27,16 @@ class Layout extends Component {
             height: '200px'
           };
         return (
-            <div className="big-container border-solid top-margin">
+            <div>
+                <div>
+                <h2 className = "title">实时查询</h2>
+                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={handleChange}>
+                        <Option value="camera1">摄像头1</Option>
+                        <Option value="camera2">摄像头2</Option>
+                        <Option value="camera3">摄像头3</Option>
+                    </Select>
+                </div>
+
                 <div className="layout-container" style={style}>
                 {
                     cameras.map((camera) => {

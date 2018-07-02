@@ -3,6 +3,7 @@ import './App.css';
 import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import Layout from './Layout/Layout';
 import MyMenu from './MyMenu/MyMenu'
+import Home from './HomePage/home'
 
 class App extends Component {
 
@@ -12,7 +13,9 @@ class App extends Component {
         <Router>
           <div>
           <MyMenu/>
-          <Route exact path="/layout" component={Layout}></Route>
+              <Route exact path="/layout" component={Layout}></Route>
+              <Route exact path="/home" component={Home}></Route>
+              <Route exact path="/" component={Home}></Route>
           </div>
         </Router>
       </div>

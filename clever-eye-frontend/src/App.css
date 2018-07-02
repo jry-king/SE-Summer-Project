@@ -1,3 +1,5 @@
+@import '~antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
@@ -43,11 +45,11 @@
   margin: auto;
   position: relative;
   width: 800px;
+  height: 800px;
 }
 
 .layout-container .btn {
   position: absolute;
-  
   background-color: #555;
   color: white;
   font-size: 16px;
@@ -55,4 +57,51 @@
   border: none;
   cursor: pointer;
   border-radius: 2px;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 300px;
+  padding: 5px;
+  color: white;
+}
+
+.App-title {
+  margin-right: 200px;
+  font-size: 4em;
+  color: aliceblue;
+}
+
+.title {
+  color: white;
+  text-align: left
+}
+
+.subtitle {
+  float: left;
+  color: white;
+}
+
+.homebutton1{
+  height: 70px;
+  width: 150px;
+  float: left;
+  margin-left: 400px;
+}
+
+.homebutton2{
+  height: 70px;
+  width: 150px;
+  float: right;
+  margin-right: 400px;
 }
