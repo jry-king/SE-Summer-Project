@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import Camera from './Camera'
-import {hlsServer} from '../Global'
+import Camera from './Camera';
+import {hlsServer} from '../Global';
 import { Select } from 'antd';
 
 const cameras = [{key:1, x:'10%', y:'10%', url:'camera1'}, {key:2, x:'30%',y:'30%',url:'camera2'}]
 
+const videoWidth = 800
+const videoHeight = 400
 const Option = Select.Option;
 
 function handleChange(value) {
@@ -21,11 +23,47 @@ class Layout extends Component {
         }
     }
 
+    captureOnClick = (event) => {
+        let output = this.refs.output;
+        let video = this.refs.video;
+        let scale = 1;
+        let canvas = document.createElement("canvas");
+        let context = canvas.getContext('2d');
+
+        canvas.width = video.videoWidth * scale;
+        canvas.height = video.videoHeight * scale;
+
+        //截图
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        //转换为base64图片，再用canvas加载图片
+        let img = document.createElement("img");
+        img.src = canvas.toDataURL();
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+        
+        output.prepend(img)
+        
+        /*
+        let canvas2 = document.getElementById('canvas');
+
+        var cropper;
+        canvas2.width = canvas.width;
+        canvas2.height = canvas.height;
+        canvas2.getContext('2d').drawImage(
+            img,
+            0, 0, img.naturalWidth, img.naturalHeight,
+            0, 0, canvas.width, canvas.height
+        );
+        cropper = new Cropper(canvas2);
+        */
+    }
+
     render() {
         const style = {
             backgroundImage: `url(${this.state.backgroundImage})`,
             height: '200px'
-          };
+        };
+
         return (
             <div>
                 <div>
@@ -46,11 +84,13 @@ class Layout extends Component {
                 </div>
                 
                 <div className="video-container">
-                    <video id="my_video_1" className="video-js vjs-default-skin" controls preload="auto" width="640" height="268" 
+                    <video id="video" ref="video" className="video-js vjs-default-skin" controls preload="auto" width={videoWidth} height={videoHeight} 
                     data-setup='{}'>
                         <source src={hlsServer + this.state.toPlay +".m3u8"} type="application/x-mpegURL"/>
                     </video>
                 </div>
+                <button onClick={this.captureOnClick}>Capture</button>
+                <div ref="output"></div>
             </div>
         )
     }

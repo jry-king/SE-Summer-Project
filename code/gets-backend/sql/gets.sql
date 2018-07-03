@@ -8,5 +8,4 @@ create table cameras
     y   varchar(10) NOT NULL,
     areaid      integer NOT NULL,
     primary key (cameraid)
-    
 )
