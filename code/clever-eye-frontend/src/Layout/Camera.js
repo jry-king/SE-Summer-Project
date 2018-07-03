@@ -38,9 +38,11 @@ class Camera extends Component{
         console.log('-y:'+minusY)
 
         return(
-            <Popover content={content} title="Parameters" trigger="hover">
-                <Icon className='btn' style={styles} type="video-camera" />
-            </Popover>
+            <div className="camera">
+                <Popover content={content} title="Parameters" trigger="hover">
+                    <Icon className='btn' style={styles} type="video-camera" />
+                </Popover>
+            </div>
         )
     }
 }export default Camera
