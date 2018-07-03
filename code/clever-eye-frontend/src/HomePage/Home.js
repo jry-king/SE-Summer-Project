@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import { Card, Icon, Button } from 'antd';
+import logo from '../logo.svg';
+import { Button } from 'antd';
 import {Link } from 'react-router-dom';
-const { Meta } = Card;
 
 class Home extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
   render() {
     return (
