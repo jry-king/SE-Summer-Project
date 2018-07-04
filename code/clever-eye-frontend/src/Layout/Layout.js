@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Camera from './Camera';
 import {hlsServer} from '../Global';
-import { Select } from 'antd';
+import { Select,Icon,Button } from 'antd'
+
 import {Cropper} from 'react-image-cropper'
 
 const cameras = [{key:1, x:'10%', y:'10%', url:'camera1'}, {key:2, x:'30%',y:'30%',url:'camera2'}]
@@ -57,8 +58,12 @@ class Layout extends Component {
         return (
             <div style={{ background: '#ECECEC'}}>
                 <div>
-                    <br/>
-                    <h1>实时监控</h1>
+                    <div><header className="App-header">
+                        <h2 className = "title">GETS | 慧眼示踪搜寻系统</h2>
+                        <h3 className = "subtitle">God Eye Tracking System </h3>
+                        <h1 className="App-title">实时监控</h1>
+                        <Icon type="eye" style={{ fontSize: 70, color: 'aliceblue' }} />
+                    </header></div>
                     <br/>
                     <h2>选择摄像头</h2>
                     <Select defaultValue="camera1" style={{ width: 120 }} onChange={handleChange}>
@@ -77,7 +82,6 @@ class Layout extends Component {
                      })
                     }
                 </div>
-
                 <br/><br/><br/>
                 <h2>监控画面</h2>
                 <div className="video-container">
@@ -87,21 +91,18 @@ class Layout extends Component {
                     </video>
                 </div>
                 <br/><br/><br/>
-                <button onClick={this.captureOnClick}>截图</button>
+                <Button type="primary" size="large"onClick={this.captureOnClick}>截图</Button>
                 <div ref="output"></div>
                 <br/><br/>
                 <h3>初始画面</h3>
                 <Cropper src={this.state.imgSrc}
-                    ref={ref => { this.image = ref }}
+                         ref={ref => { this.image = ref }}
+                         className ="initialImage"
                 />
                 <br/>
                 {
                     this.state.imageLoaded
-                    ? <button
-                        onClick={() => this.handleClick('image')}
-                    >
-                    crop
-                    </button>
+                    ? <Button type="primary" size="large"onClick={this.captureOnClick}>确认</Button>
                     : null
                 }
                 <h3>最终画面</h3>

@@ -63,6 +63,17 @@
   border-radius: 2px;
 }
 
+.initialImage{
+  margin-left:600px;
+  width: 600px;
+  height: 600px;
+}
+
+.after-img{
+  width: 30%;
+  height: 30%;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
@@ -81,7 +92,7 @@
 }
 
 .App-title {
-  margin-right: 200px;
+  margin-right: 190px;
   font-size: 4em;
   color: aliceblue;
 }
