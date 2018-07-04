@@ -55,33 +55,42 @@ class Layout extends Component {
         };
 
         return (
-            <div>
+            <div style={{ background: '#ECECEC'}}>
                 <div>
-                <h2 className = "title">实时查询</h2>
+                    <br/>
+                    <h1>实时监控</h1>
+                    <br/>
+                    <h2>选择摄像头</h2>
                     <Select defaultValue="camera1" style={{ width: 120 }} onChange={handleChange}>
                         <Option value="camera1">摄像头1</Option>
                         <Option value="camera2">摄像头2</Option>
                         <Option value="camera3">摄像头3</Option>
                     </Select>
+                    <br/><br/><br/>
+                    <h2>地图</h2>
                 </div>
                 
                 <div className="layout-container" style={style}>
-                {
-                    cameras.map((camera) => {
-                        return <Camera key={camera.key} x={camera.x} y={camera.y}/>
-                    })
-                }
+                    {
+                        cameras.map((camera) => {
+                            return <Camera key={camera.key} x={camera.x} y={camera.y}/>
+                     })
+                    }
                 </div>
-                
+
+                <br/><br/><br/>
+                <h2>监控画面</h2>
                 <div className="video-container">
                     <video id="video" ref="video" className="video-js vjs-default-skin" controls preload="auto" width={videoWidth} height={videoHeight} 
                     data-setup='{}'>
                         <source src={hlsServer + this.state.toPlay +".m3u8"} type="application/x-mpegURL"/>
                     </video>
                 </div>
-                <button onClick={this.captureOnClick}>Capture</button>
+                <br/><br/><br/>
+                <button onClick={this.captureOnClick}>截图</button>
                 <div ref="output"></div>
-                <h3>Default image crop</h3>
+                <br/><br/>
+                <h3>初始画面</h3>
                 <Cropper src={this.state.imgSrc}
                     ref={ref => { this.image = ref }}
                 />
@@ -95,7 +104,7 @@ class Layout extends Component {
                     </button>
                     : null
                 }
-                <h4>after crop</h4>
+                <h3>最终画面</h3>
                 {
                     this.state.image
                     ? <img
@@ -105,6 +114,7 @@ class Layout extends Component {
                     />
                     : null
                 }
+                <br/><br/>
             </div>
         )
     }
