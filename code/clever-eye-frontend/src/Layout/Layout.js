@@ -1,34 +1,57 @@
 import React, { Component } from 'react';
 import Camera from './Camera';
-import {hlsServer} from '../Global';
+import {hlsServer, dataApi} from '../Global';
 import { Select,Icon,Button } from 'antd'
 
 import {Cropper} from 'react-image-cropper'
 
-const cameras = [{key:1, x:'10%', y:'10%', url:'camera1'}, {key:2, x:'30%',y:'30%',url:'camera2'}]
+const cameras = [{key:1, x:'10%', y:'10%', url:'camera1',area:1}, {key:2, x:'30%',y:'30%',url:'camera2',area:1}]
+const backgroundImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEgASAMBIgACEQEDEQH/xAAYAAADAQEAAAAAAAAAAAAAAAAAAQIDBv/EABgQAQEBAQEAAAAAAAAAAAAAAAABAhEh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAEGBf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AOhkaSDMXI7jKlIrhyKkRUcHGnCsBnYixtYmxUYagXqeAFZjSRGWkRTkPhw+AQ4fAKmxFjRNgjKwHo1QstIzy0iKo0wxVFR0dQJNUmqiNAaCojNaSsM6XNA3lNlNKmkVYT0ugrqbU3SboBqhnrQVGeWmaAC5T6AA6OgAVqbSAItACj//2Q=="
 
 const videoWidth = 800
 const videoHeight = 400
 const Option = Select.Option;
-
-function handleChange(value) {
-    console.log(`selected ${value}`);
-}
 
 class Layout extends Component {
 
     constructor(props){
         super(props)
         this.state={
-            backgroundImage: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEgASAMBIgACEQEDEQH/xAAYAAADAQEAAAAAAAAAAAAAAAAAAQIDBv/EABgQAQEBAQEAAAAAAAAAAAAAAAABAhEh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAEGBf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AOhkaSDMXI7jKlIrhyKkRUcHGnCsBnYixtYmxUYagXqeAFZjSRGWkRTkPhw+AQ4fAKmxFjRNgjKwHo1QstIzy0iKo0wxVFR0dQJNUmqiNAaCojNaSsM6XNA3lNlNKmkVYT0ugrqbU3SboBqhnrQVGeWmaAC5T6AA6OgAVqbSAItACj//2Q==",
-            toPlay: cameras[0].url,
+            cameras: cameras,
+            backgroundImage: backgroundImage,
+            videoUrl: cameras[0].url,
             imgSrc: null,
             imageLoaded: false
         }
     }
 
-    captureOnClick = (event) => {
-        let output = this.refs.output;
+    getCamera = () => {
+        fetch(dataApi + "/camera?area=1",{
+            method: 'get',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                if (result.status)
+                    message.error(result.msg)
+                else
+                    this.setState({
+                        cameras: result,
+                        videoUrl: result[0].url
+                    })
+            },
+            (error) => {
+                message.error(error)
+            }
+        )
+    }
+
+    handleChange = (value) => {
+        this.setState({videoUrl: value})
+    }
+
+    captureOnClick = () => {
         let video = this.refs.video;
         let scale = 1;
         let canvas = document.createElement("canvas");
@@ -42,7 +65,7 @@ class Layout extends Component {
         this.setState({imageLoaded: true})
     }
 
-    handleClick (state) {
+    cropOnClick = (state) => {
         let node = this[state]
         this.setState({
           [state]: node.crop()
@@ -66,10 +89,12 @@ class Layout extends Component {
                     </header></div>
                     <br/>
                     <h2>选择摄像头</h2>
-                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={handleChange}>
-                        <Option value="camera1">摄像头1</Option>
-                        <Option value="camera2">摄像头2</Option>
-                        <Option value="camera3">摄像头3</Option>
+                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={this.handleChange}>
+                    {
+                        cameras.map((camera) => {
+                            return <Option value={camera.url}>{"摄像头"+camera.key}</Option>
+                        })
+                    }
                     </Select>
                     <br/><br/><br/>
                     <h2>地图</h2>
@@ -87,12 +112,11 @@ class Layout extends Component {
                 <div className="video-container">
                     <video id="video" ref="video" className="video-js vjs-default-skin" controls preload="auto" width={videoWidth} height={videoHeight} 
                     data-setup='{}'>
-                        <source src={hlsServer + this.state.toPlay +".m3u8"} type="application/x-mpegURL"/>
+                        <source src={hlsServer + this.state.videoUrl +".m3u8"} type="application/x-mpegURL"/>
                     </video>
                 </div>
                 <br/><br/><br/>
-                <Button type="primary" size="large"onClick={this.captureOnClick}>截图</Button>
-                <div ref="output"></div>
+                <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
                 <h3>初始画面</h3>
                 <Cropper src={this.state.imgSrc}
@@ -102,17 +126,21 @@ class Layout extends Component {
                 <br/>
                 {
                     this.state.imageLoaded
-                    ? <Button type="primary" size="large"onClick={this.captureOnClick}>确认</Button>
+                    ? <Button type="primary" size="large" onClick={() => this.cropOnClick('image')}>确认</Button>
                     : null
                 }
                 <h3>最终画面</h3>
                 {
                     this.state.image
-                    ? <img
+                    ? 
+                    <div>
+                    <img
                         className="after-img"
                         src={this.state.image}
                         alt=""
                     />
+                    <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
+                    </div>
                     : null
                 }
                 <br/><br/>
