@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Camera from './Camera';
-import {hlsServer} from '../Global';
+import {hlsServer, dataApi} from '../Global';
 import { Select,Icon,Button } from 'antd'
 
 import {Cropper} from 'react-image-cropper'
@@ -17,6 +17,7 @@ class Layout extends Component {
     constructor(props){
         super(props)
         this.state={
+            cameras: cameras,
             backgroundImage: backgroundImage,
             videoUrl: cameras[0].url,
             imgSrc: null,
@@ -24,12 +25,30 @@ class Layout extends Component {
         }
     }
 
-    handleChange = (value) => {
-        for (let i in cameras){
-            if (cameras[i].key===value){
-                this.setState({videoUrl: cameras[i].url})
+    getCamera = () => {
+        fetch(dataApi + "/camera?area=1",{
+            method: 'get',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                if (result.status)
+                    message.error(result.msg)
+                else
+                    this.setState({
+                        cameras: result,
+                        videoUrl: result[0].url
+                    })
+            },
+            (error) => {
+                message.error(error)
             }
-        }
+        )
+    }
+
+    handleChange = (value) => {
+        this.setState({videoUrl: value})
     }
 
     captureOnClick = () => {
