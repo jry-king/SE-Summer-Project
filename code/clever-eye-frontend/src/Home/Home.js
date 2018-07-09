@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import logo from '../logo.svg';
 import { Button } from 'antd';
-import {Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Header from '../Utils/Header'
 
 class Home extends Component {
 
@@ -9,9 +10,7 @@ class Home extends Component {
     return (
       <div className="App">
           <div><header className="App-header">
-              <h2 className = "title">GETS | 慧眼示踪搜寻系统</h2>
-              <h3 className = "subtitle">God Eye Tracking System </h3>
-              <h1 className="App-title">GETS</h1>
+              <Header title="GETS"/>
               <img src={logo} className="App-logo" alt="logo" />
           </header></div>
           <div style={{ background: '#ECECEC', padding: '30px', height:'400px' }}>
