@@ -1,5 +1,10 @@
+# Some changes from the original docker image (Important!!!)
+* Support local video (some changes in nginx.conf)
+* docker run -it -p 1935:1935 -p 8080:80 -v /{your config path}/nginx.conf:/opt/nginx/nginx.conf -v /{your video path}/video:/opt/video --rm alfg/nginx-rtmp
+
 # Source
 * https://github.com/alfg/docker-nginx-rtmp
+* The following is the doc of the original repo
 
 # docker-nginx-rtmp
 A Dockerfile installing NGINX, nginx-rtmp-module and FFmpeg from source with
