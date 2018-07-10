@@ -5,7 +5,6 @@ class Camera extends Component{
 
     render(){
         const camera = this.props.camera
-        const
         const content = (<div>
                 <p>{'param1:' + camera.param1 }</p>
                 <p>{'param2:' + camera.param2 }</p>
