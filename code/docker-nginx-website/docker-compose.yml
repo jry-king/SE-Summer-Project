@@ -1,0 +1,14 @@
+version: '2'
+services:
+  gets-nginx:
+    image: nginx:latest 
+    ports:
+     - "80:80"
+    volumes:
+     - /{your nginx.conf path}/nginx.conf:/etc/nginx/conf.d/default.conf
+     - /{your built project path}/build:/usr/share/nginx/html
+     - /{your log path}}/logs:/var/log/nginx
+    # video
+     - /{your video path}/video:/opt/video
+    # 覆盖容器启动后默认执行的命令。
+    command: /bin/bash -c "nginx -g 'daemon off;'"

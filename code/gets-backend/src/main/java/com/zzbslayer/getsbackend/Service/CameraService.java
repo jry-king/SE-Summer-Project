@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface CameraService {
     List<CamerasEntity> findByAreaid(Integer id);
+    List<CamerasEntity> findAll();
 }
