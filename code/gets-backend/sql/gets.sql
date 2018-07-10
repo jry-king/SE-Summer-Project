@@ -8,4 +8,12 @@ create table cameras
     y   varchar(10) NOT NULL,
     areaid      integer NOT NULL,
     primary key (cameraid)
+);
+
+create table history
+(
+    id  integer NOT NULL UNIQUE AUTO_INCREMENT,
+    cameraid integer NOT NULL,
+    filename varchar(100) NOT NULL,
+    primary key (id)
 )

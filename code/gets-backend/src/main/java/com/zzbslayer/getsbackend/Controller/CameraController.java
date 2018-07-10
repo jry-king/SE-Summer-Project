@@ -17,6 +17,12 @@ public class CameraController {
     @Autowired
     private CameraService cameraService;
 
+    @GetMapping(value="/camera/all")
+    @ResponseBody
+    public List<CamerasEntity> findAll(){
+        return cameraService.findAll();
+    }
+
     @GetMapping(value="/camera")
     @ResponseBody
     public List<CamerasEntity> findByAreaid(@RequestParam("areaid")Integer areaid){

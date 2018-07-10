@@ -4,14 +4,16 @@ import { Popover, Icon } from 'antd';
 class Camera extends Component{
 
     render(){
+        const camera = this.props.camera
+        const
         const content = (<div>
-                <p>{'param1:' + this.props.param1 }</p>
-                <p>{'param2:' + this.props.param2 }</p>
-                <p>{'param3:' + this.props.param3 }</p>
+                <p>{'param1:' + camera.param1 }</p>
+                <p>{'param2:' + camera.param2 }</p>
+                <p>{'param3:' + camera.param3 }</p>
             </div>)
         
-        const x = this.props.x
-        const y = this.props.y
+        const x = camera.x
+        const y = camera.y
 
         const minusX = '-'+x
         const minusY = '-'+y
@@ -24,7 +26,7 @@ class Camera extends Component{
 
         return(
             <div className="camera">
-                <Popover content={content} title={"Camera"+this.props.id} trigger="hover">
+                <Popover content={content} title={"Camera"+camera.key} trigger="hover">
                     <Icon className='btn' style={styles} type="video-camera" />
                 </Popover>
             </div>

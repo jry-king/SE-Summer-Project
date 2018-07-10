@@ -16,7 +16,7 @@ class Map extends Component{
                 <div className="layout-container" style={style}>
                     {
                         cameras.map((camera) => {
-                            return <Camera key={camera.key} x={camera.x} y={camera.y}/>
+                            return <Camera key={camera.key} camera={camera}/>
                      })
                     }
                 </div>

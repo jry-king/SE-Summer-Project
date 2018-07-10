@@ -16,4 +16,8 @@ public class CameraServiceImpl implements CameraService{
     public List<CamerasEntity> findByAreaid(Integer id) {
         return cameraRepository.findByAreaid(id);
     }
+
+    public List<CamerasEntity> findAll(){
+        return cameraRepository.findAll();
+    }
 }

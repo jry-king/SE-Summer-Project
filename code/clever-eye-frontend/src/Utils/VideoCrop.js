@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component} from 'react'
 import {Cropper} from 'react-image-cropper'
 import { Button } from 'antd'
 
@@ -13,6 +13,11 @@ class VideoCrop extends Component {
             imgSrc: null,
             imageLoaded: false
         }
+    }
+
+    componentWillUnmount = () => {
+        this.player && this.player.dispose();
+        this.player = null;
     }
 
     captureOnClick = () => {
@@ -45,12 +50,23 @@ class VideoCrop extends Component {
         return(
             <div style={style}>
                 <h2>监控画面</h2>
-                <div className="video-container">
-                    <video id="video" ref="video" className="video-js vjs-default-skin" controls preload="auto" width={videoWidth} height={videoHeight} 
-                    data-setup='{}'>
-                        <source src={this.props.videoUrl} type={this.props.videoType}/>
+                <div className="video-container" 
+                    alt="snap"
+                    key="media"
+                    data-vjs-player>
+
+                    <video
+                        className="video-js vjs-default-skin" controls preload="auto"
+                        ref = "video"
+                        poster={ this.props.poster }
+                        width={videoWidth} height={videoHeight} 
+                        data-setup='{}'>
+
+                        <source src={ this.props.videoUrl } type={this.props.videoType} />
+
                     </video>
                 </div>
+
                 <br/><br/><br/>
                 <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
