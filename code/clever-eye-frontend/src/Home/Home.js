@@ -15,8 +15,8 @@ class Home extends Component {
           </header></div>
           <div style={{ background: '#ECECEC', padding: '30px', height:'400px' }}>
               <br/><br/>
-              <Link to='/layout'><Button type="primary" icon="eye" size="large" className ='homebutton1'>实时监控</Button></Link>
-              <Link to='/layout'><Button type="primary" icon="search" size="large" className ='homebutton2'>开始搜寻</Button></Link>
+              <Link to='/video/live'><Button type="primary" icon="eye" size="large" className ='homebutton1'>实时监控</Button></Link>
+              <Link to='/video/history'><Button type="primary" icon="search" size="large" className ='homebutton2'>开始搜寻</Button></Link>
               <br/><br/><br/><br/><br/><br/><br/>
               <h2 className = "footnote1">"Can't Nobody Hide from God"</h2>
               <h2 className = "footnote2">——Blind Willie Johnson </h2>

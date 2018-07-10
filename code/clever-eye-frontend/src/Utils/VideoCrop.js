@@ -56,6 +56,7 @@ class VideoCrop extends Component {
                     data-vjs-player>
 
                     <video
+						key={this.props.videoUrl}
                         className="video-js vjs-default-skin" controls preload="auto"
                         ref = "video"
                         poster={ this.props.poster }

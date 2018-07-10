@@ -20,7 +20,7 @@ class HistoryVideo extends Component {
             videoUrl: history[0].file,
             cameras: cameras,
             visibility: "hidden",
-
+			cameraChosen: false,
             imgSrc: null,
             imageLoaded: false
         }
@@ -30,8 +30,12 @@ class HistoryVideo extends Component {
         this.setState({visibility: "visible"})
     }
 
-    handleChange = (value) => {
-        this.setState({videoUrl: value, visibility: "hidden"})
+    handleChangeCamera = (value) => {
+        this.setState({videoUrl: value, visibility: "hidden",cameraChosen:true})
+    }
+	
+	handleChangeFragment = (value) => {
+        this.setState({videoUrl: value})
     }
 
     getCamera = () => {
@@ -71,7 +75,7 @@ class HistoryVideo extends Component {
                 
                 <div className="select-container">
                     <h2>选择摄像头</h2>
-                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={this.handleChange}>
+                    <Select defaultValue="" style={{ width: 120 }} onChange={this.handleChangeCamera}>
                     {
                         cameras.map((camera) => {
                             return <Option key={camera.key} id={camera.key} value={camera.url}>{"摄像头"+camera.key}</Option>
@@ -79,14 +83,32 @@ class HistoryVideo extends Component {
                     }
                     </Select>
 
-                    <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
                     <br/><br/><br/>
                 </div>
+				
+				<div>
+				{
+                    this.state.cameraChosen
+                    ? <div className="select-container">
+						<h2>选择视频片段</h2>
+						<Select defaultValue="" style={{ width: 120 }} onChange={this.handleChangeFragment}>
+						{
+							history.map((history) => {
+								return <Option key={history.key} id={history.key} value={history.file}>{"片段"+history.key}</Option>
+							})
+						}
+						</Select>
+						<Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
+						<br/><br/><br/>
+					</div>
+                    : null
+                }
+				</div>
 
                 <Map cameras={cameras} backgroundImage={backgroundImage}/>
 
                 <br/><br/><br/>
-                <VideoCrop videoUrl={videoUrl} visibility={visibility} videoType={videoType}/>
+                <VideoCrop videoUrl={videoUrl} visibility={visibility} videoType={videoType} className="historyVideo"/>
                 
                 <br/><br/>
             </div>
