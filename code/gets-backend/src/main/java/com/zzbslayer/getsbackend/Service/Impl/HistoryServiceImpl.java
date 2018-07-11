@@ -21,8 +21,11 @@ public class HistoryServiceImpl implements HistoryService{
         return historyRepository.findByCameraid(cameraid);
     }
 
-    public void deleteByCameraid(Integer cameraid){
-        historyRepository.deleteByCameraid(cameraid);
+    public void deleteById(Integer id){
+        historyRepository.deleteById(id);
     }
 
+    public HistoryEntity save(HistoryEntity historyEntity) {
+        return historyRepository.save(historyEntity);
+    }
 }

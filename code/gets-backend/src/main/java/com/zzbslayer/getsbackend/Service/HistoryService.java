@@ -9,5 +9,7 @@ public interface HistoryService {
 
     List<HistoryEntity> findByCameraid(Integer cameraid);
 
-    void deleteByCameraid(Integer caemraid);
+    void deleteById(Integer id);
+
+    HistoryEntity save(HistoryEntity historyEntity);
 }
