@@ -20,4 +20,12 @@ public class CameraServiceImpl implements CameraService{
     public List<CamerasEntity> findAll(){
         return cameraRepository.findAll();
     }
+
+    void deleteByCameraid(Integer cameraid){
+        cameraRepository.deleteByCameraid(cameraid);
+    }
+
+    public CamerasEntity save(CamerasEntity camerasEntity){
+        return cameraRepository.save(camerasEntity);
+    }
 }

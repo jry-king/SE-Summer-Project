@@ -17,7 +17,10 @@ class App extends Component {
             <MyMenu/>
             <Route exact path="/management" component={Management}></Route>
             <Route exact path="/video/live" component={LiveVideo}></Route>
+            <Route exact path="/video/live/:camera" component={LiveVideo}></Route>
+
             <Route exact path="/video/history" component={HistoryVideo}></Route>
+            <Route exact path="/video/history/:file" component={HistoryVideo}></Route>
             <Route exact path="/home" component={Home}></Route>
             <Route exact path="/" component={Home}></Route>
           </div>
