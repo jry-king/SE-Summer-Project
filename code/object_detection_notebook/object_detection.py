@@ -6,7 +6,7 @@ import sys
 import tarfile
 import tensorflow as tf
 import zipfile
-
+import csv
 from collections import defaultdict
 from io import StringIO
 from matplotlib import pyplot as plt
@@ -121,11 +121,13 @@ from IPython.display import HTML
 def main(argv):
     clip1 = VideoFileClip(argv[1]).subclip(int(argv[2]),int(argv[3])).without_audio().set_fps(1)
     index = 0
+    csvFile = open('info_query.csv','w')
+    writer = csv.writer(csvFile)
     for image_np in clip1.iter_frames(1,False,True,None):
         # save origin picture for chopping
         origin_np = copy(image_np)
         # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
-        image_np_expanded = np.expand_dims(image_np, axis=0)
+        # image_np_expanded = np.expand_dims(image_np, axis=0)
         # Actual detection.
         output_dict = run_inference_for_single_image(image_np, detection_graph)
         img_size=[len(image_np[0]),len(image_np)]
@@ -139,11 +141,14 @@ def main(argv):
             p4=(output_dict['detection_boxes'][j][2]*img_size[1]).round()
             region_np = origin_np[int(p2):int(p4),int(p1):int(p3)]
             img=Image.fromarray(region_np)
-            resultFileName=os.getcwd()+'/results/'+str(index)+'-'+str(j)+'.jpg'
+            relativePath = 'results/'+str(index)+'-'+str(j)+'.jpg'
+            resultFileName=os.getcwd()+'/' +relativePath
+            writer.writerow([index+1,relativePath])
             img.save(resultFileName)
             plt.figure(figsize=(1920,1080))
 
         index=index+1
+    csvFile.close()
 
 if __name__ == "__main__":
     main(sys.argv)
