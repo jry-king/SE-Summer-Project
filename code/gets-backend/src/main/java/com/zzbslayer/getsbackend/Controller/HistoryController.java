@@ -1,7 +1,7 @@
 package com.zzbslayer.getsbackend.Controller;
 
-import com.zzbslayer.getsbackend.DataModel.Entity.CamerasEntity;
-import com.zzbslayer.getsbackend.Service.CameraService;
+import com.zzbslayer.getsbackend.DataModel.Entity.HistoryEntity;
+import com.zzbslayer.getsbackend.Service.HistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,21 +13,19 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value="/api")
-public class CameraController {
+public class HistoryController {
     @Autowired
-    private CameraService cameraService;
+    private HistoryService historyService;
 
-    @GetMapping(value="/camera/all")
+    @GetMapping("/history")
     @ResponseBody
-    public List<CamerasEntity> findAll(){
-        return cameraService.findAll();
+    public List<HistoryEntity> findByCameraid(@RequestParam("cameraid")Integer cameraid){
+        return historyService.findByCameraid(cameraid);
     }
 
-    @GetMapping(value="/camera")
+    @GetMapping("/history/all")
     @ResponseBody
-    public List<CamerasEntity> findByAreaid(@RequestParam("areaid")Integer areaid){
-        return cameraService.findByAreaid(areaid);
+    public List<HistoryEntity> findAll(){
+        return historyService.findAll();
     }
-
-    
 }

@@ -7,4 +7,8 @@ import java.util.List;
 public interface CameraService {
     List<CamerasEntity> findByAreaid(Integer id);
     List<CamerasEntity> findAll();
+
+    void deleteByCameraid(Integer cameraid);
+
+    CamerasEntity save(CamerasEntity camerasEntity);
 }

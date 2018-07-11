@@ -1,18 +1,16 @@
 package com.zzbslayer.getsbackend.DataModel.Repository;
 
-import com.zzbslayer.getsbackend.DataModel.Entity.CamerasEntity;
+import com.zzbslayer.getsbackend.DataModel.Entity.HistoryEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CameraRepository extends JpaRepository<CamerasEntity, Integer>{
+public interface HistoryRepository extends JpaRepository<HistoryEntity, Integer> {
+    List<HistoryEntity> findAll();
 
-    List<CamerasEntity> findAll();
-
-    List<CamerasEntity> findByAreaid(Integer areaid);
+    List<HistoryEntity> findByCameraid(Integer cameraid);
 
     void deleteByCameraid(Integer cameraid);
-
 }

@@ -15,9 +15,8 @@ class LiveVideo extends Component {
     constructor(props){
         super(props)
         this.state={
-            videoUrl: cameras[0].url,
             cameras: cameras,
-            visibility: "hidden",
+            videoUrl: cameras[0].url,
 
             imgSrc: null,
             imageLoaded: false
@@ -25,11 +24,11 @@ class LiveVideo extends Component {
     }
 
     handleClick = () => {
-        this.setState({visibility: "visible"})
+        window.location.href = "/video/live/"+this.state.videoUrl;
     }
 
     handleChange = (value) => {
-        this.setState({videoUrl: value, visibility: "hidden"})
+        this.setState({videoUrl:value})
     }
 
     getCamera = () => {
@@ -55,9 +54,9 @@ class LiveVideo extends Component {
     }
 
     render() {
-        const videoUrl = hlsServer + this.state.videoUrl + ".m3u8"
-        const visibility = this.state.visibility
-        console.log(videoUrl)
+        const camera = this.props.match.params.camera
+        const videoUrl = hlsServer + camera + ".m3u8"
+        console.log(camera)
         return (
             <div style={{ background: '#ECECEC'}}>
                 <header className="App-header">
@@ -69,7 +68,7 @@ class LiveVideo extends Component {
                 
                 <div className="select-container">
                     <h2>选择摄像头</h2>
-                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={this.handleChange}>
+                    <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
                     {
                         cameras.map((camera) => {
                             return <Option key={camera.key} id={camera.key} value={camera.url}>{"摄像头"+camera.key}</Option>
@@ -83,7 +82,9 @@ class LiveVideo extends Component {
                 <Map cameras={cameras} backgroundImage={backgroundImage}/>
 
                 <br/><br/><br/>
-                <VideoCrop videoUrl={videoUrl} visibility={visibility} videoType={videoType}/>
+                {
+                    camera?<VideoCrop videoUrl={videoUrl} videoType={videoType}/>:null
+                }
                 
                 <br/><br/>
             </div>
