@@ -21,7 +21,7 @@ public class CameraServiceImpl implements CameraService{
         return cameraRepository.findAll();
     }
 
-    void deleteByCameraid(Integer cameraid){
+    public void deleteByCameraid(Integer cameraid){
         cameraRepository.deleteByCameraid(cameraid);
     }
 

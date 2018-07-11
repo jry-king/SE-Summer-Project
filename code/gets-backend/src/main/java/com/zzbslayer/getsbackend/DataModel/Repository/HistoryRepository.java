@@ -12,5 +12,5 @@ public interface HistoryRepository extends JpaRepository<HistoryEntity, Integer>
 
     List<HistoryEntity> findByCameraid(Integer cameraid);
 
-    void deleteByCameraid(Integer cameraid);
+    void deleteById(Integer id);
 }
