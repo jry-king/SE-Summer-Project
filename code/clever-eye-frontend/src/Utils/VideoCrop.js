@@ -55,7 +55,7 @@ class VideoCrop extends Component {
                     key="media"
                     data-vjs-player>
 
-                    <video
+                    <video className="video"
 						key={this.props.videoUrl}
                         className="video-js vjs-default-skin" controls preload="auto"
                         ref = "video"
@@ -71,37 +71,51 @@ class VideoCrop extends Component {
                 <br/><br/><br/>
                 <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
-
-                <h3>初始画面</h3>
-                {
-                    this.state.imgSrc?
-                    <Cropper src={this.state.imgSrc}
-                    ref={ref => { this.image = ref }}
-                    className ="initialImage"
-                    /> : null
-                }
+				
+				<div>
+				{
+					this.state.imgSrc?
+					<div>
+					<h3>初始画面</h3>
+					{
+						<Cropper src={this.state.imgSrc}
+						ref={ref => { this.image = ref }}
+						className ="initialImage"
+						/> 
+						}
+					</div>
+					: null
+					}
+				</div>
+				
                 <br/>
+				<div>
                 {
                     this.state.imageLoaded
                     ? <Button type="primary" size="large" onClick={() => this.cropOnClick('image')}>确认</Button>
                     : null
                 }
-
-                <h3>最终画面</h3>
-                {
-                    this.state.image
-                    ? 
-                    <div>
-                    <img
-                        className="after-img"
-                        src={this.state.image}
-                        alt=""
-                    />
-                    <br/>
-                    <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
-                    </div>
-                    : null
-                }
+				</div>
+				
+				<div>
+				{
+					this.state.image?
+					<div>
+						<h3>最终画面</h3>
+						{
+							<div>
+							<img
+								className="after-img"
+								src={this.state.image}
+								alt=""
+							/>
+							<br/>
+							<Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
+							</div>
+						}
+					</div> : null
+				}
+				</div>
             </div>
         )
     }

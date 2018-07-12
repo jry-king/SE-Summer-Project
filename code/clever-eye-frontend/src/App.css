@@ -45,6 +45,12 @@
   height: 20%;
 }
 
+.video {
+  margin-left:20%;
+}
+
+
+
 .layout-container {
   margin: auto;
   position: relative;
@@ -119,4 +125,9 @@
   width: 150px;
   float: right;
   margin-right: 400px;
+
+}
+
+.liveVideo{
+	margin-left:20%;
 }
