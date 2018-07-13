@@ -94,24 +94,26 @@ class MapManagement extends Component{
             </div>
           );
 
-        return(
-            
-            <div>
-                <Upload
-                    name="map"
-                    listType="picture-card"
-                    className="avatar-uploader"
-                    showUploadList={false}
-                    beforeUpload={this.beforeUpload}
-                    onChange={this.handleChange}
-                >
-                        {
+        return(            
+			<div >
+				<div className="avatar-uploader">
+					<Upload
+						name="map"
+						listType="picture-card"
+						showUploadList={false}
+						beforeUpload={this.beforeUpload}
+						onChange={this.handleChange}
+					>
+						{
                             mapString ? <img src={mapString} alt="map" /> : uploadButton
                         }
                 </Upload>
-                <br/>
-                <Button color="primary" type="submit" onClick={this.handleUpload}>Submit</Button>
-            </div>
+				<br/>
+				</div>
+				<div>
+					<Button color="primary" type="submit" onClick={this.handleUpload}>Submit</Button>
+				</div>
+			</div>
         )
     }
 }
