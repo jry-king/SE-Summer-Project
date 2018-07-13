@@ -83,9 +83,7 @@ def main():
 
     batch_distances = loss.cdist(batch_embs, gallery_embs, metric=args.metric)
 
-    # Loop over the query embeddings and compute their APs and the CMC curve.
-    aps = []
-    cmc = np.zeros(len(gallery_pids), dtype=np.int32)
+    # Loop over the query embeddings.
     with tf.Session() as sess:
         for start_idx in count(step=args.batch_size):
             try:
@@ -95,6 +93,7 @@ def main():
                 print('\rEvaluating batch {}-{}/{}'.format(
                         start_idx, start_idx + len(fids), len(query_fids)),
                       flush=True, end='')
+                print()
             except tf.errors.OutOfRangeError:
                 print()  # Done!
                 break
@@ -117,33 +116,11 @@ def main():
             # it won't change anything.
             scores = 1 / (1 + distances)
             for i in range(len(distances)):
-                ap = average_precision_score(pid_matches[i], scores[i])
-
-                if np.isnan(ap):
-                    print()
-                    print("WARNING: encountered an AP of NaN!")
-                    print("This usually means a person only appears once.")
-                    print("In this case, it's because of {}.".format(fids[i]))
-                    print("I'm excluding this person from eval and carrying on.")
-                    print()
-                    continue
-
-                aps.append(ap)
-                # Find the first true match and increment the cmc data from there on.
-                k = np.where(pid_matches[i, np.argsort(distances[i])])[0][0]
-                cmc[k:] += 1
-
-    # Compute the actual cmc and mAP values
-    cmc = cmc / len(query_pids)
-    mean_ap = np.mean(aps)
+                print(gallery_fids[np.argsort(distances[i])[0]])
 
     # Save important data
-    if args.filename is not None:
-        json.dump({'mAP': mean_ap, 'CMC': list(cmc), 'aps': list(aps)}, args.filename)
-
-    # Print out a short summary.
-    print('mAP: {:.2%} | top-1: {:.2%} top-2: {:.2%} | top-5: {:.2%} | top-10: {:.2%}'.format(
-        mean_ap, cmc[0], cmc[1], cmc[4], cmc[9]))
+    # if args.filename is not None:
+    #     json.dump({'mAP': mean_ap, 'CMC': list(cmc), 'aps': list(aps)}, args.filename)
 
 if __name__ == '__main__':
     main()
