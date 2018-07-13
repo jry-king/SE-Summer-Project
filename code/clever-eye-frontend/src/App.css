@@ -41,6 +41,7 @@
 
 
 .video-container {
+  margin-right:30%;
   width: 20%;
   height: 20%;
 }
@@ -133,13 +134,8 @@
 
 }
 
-.liveVideoCrop{
-	margin-left:20%;
-}
-
-.historyVideoCrop{
-	margin-left:20%;
-
+.videoCrop{
+	margin:auto;
 }
 
 .screenShotButton{
@@ -148,4 +144,17 @@
 
 .monitorTitle{
 	margin-right:27%;
+}
+
+.avatar-uploader{
+	margin-left:46%;
+}
+
+.managementTable{
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.managementDiv{
+	height:500px;
 }

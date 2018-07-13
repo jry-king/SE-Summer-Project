@@ -7,7 +7,7 @@ import java.util.List;
 public interface HistoryService {
     List<HistoryEntity> findAll();
 
-    List<HistoryEntity> findByCameraid(Integer cameraid);
+    List<HistoryEntity> findByAreaid(Integer areaid);
 
     void deleteById(Integer id);
 

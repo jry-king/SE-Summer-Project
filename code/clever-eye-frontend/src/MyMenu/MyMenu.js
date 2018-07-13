@@ -34,6 +34,11 @@ class MyMenu extends Component{
             <Menu.Item key="historyVideo">
                 <Link to={historyVideoUrl}><Icon type="search" />历史视频</Link>
             </Menu.Item>
+			
+			<Menu.Item key="management">
+                <Link to={managementUrl}><Icon type="setting" />管理</Link>
+            </Menu.Item>
+            
             </Menu>
       )
     }

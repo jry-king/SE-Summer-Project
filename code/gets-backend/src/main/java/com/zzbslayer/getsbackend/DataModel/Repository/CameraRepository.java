@@ -15,4 +15,6 @@ public interface CameraRepository extends JpaRepository<CamerasEntity, Integer>{
 
     void deleteByCameraid(Integer cameraid);
 
+    CamerasEntity findByCameraid(Integer cameraid);
+
 }

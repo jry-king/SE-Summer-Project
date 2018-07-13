@@ -17,8 +17,8 @@ public class HistoryController {
 
     @GetMapping("/history")
     @ResponseBody
-    public List<HistoryEntity> findByCameraid(@RequestParam("cameraid")Integer cameraid){
-        return historyService.findByCameraid(cameraid);
+    public List<HistoryEntity> findByAreaid(@RequestParam("areaid")Integer areaid){
+        return historyService.findByAreaid(areaid);
     }
 
     @GetMapping("/history/all")

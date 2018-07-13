@@ -5,18 +5,19 @@ import javax.persistence.*;
 @Entity
 @Table(name = "history", schema = "gets", catalog = "")
 public class HistoryEntity {
-    private int id;
+    private int historyid;
     private int cameraid;
+    private int areaid;
     private String filename;
 
     @Id
-    @Column(name = "id", nullable = false)
-    public int getId() {
-        return id;
+    @Column(name = "historyid", nullable = false)
+    public int getHistoryid() {
+        return historyid;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHistoryid(int historyid) {
+        this.historyid = historyid;
     }
 
     @Basic
@@ -27,6 +28,16 @@ public class HistoryEntity {
 
     public void setCameraid(int cameraid) {
         this.cameraid = cameraid;
+    }
+
+    @Basic
+    @Column(name = "areaid", nullable = false)
+    public int getAreaid() {
+        return areaid;
+    }
+
+    public void setAreaid(int areaid) {
+        this.areaid = areaid;
     }
 
     @Basic
@@ -46,8 +57,9 @@ public class HistoryEntity {
 
         HistoryEntity that = (HistoryEntity) o;
 
-        if (id != that.id) return false;
+        if (historyid != that.historyid) return false;
         if (cameraid != that.cameraid) return false;
+        if (areaid != that.areaid) return false;
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
 
         return true;
@@ -55,8 +67,9 @@ public class HistoryEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = historyid;
         result = 31 * result + cameraid;
+        result = 31 * result + areaid;
         result = 31 * result + (filename != null ? filename.hashCode() : 0);
         return result;
     }

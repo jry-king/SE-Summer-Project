@@ -6,7 +6,6 @@ class Map extends Component{
     render(){
         const style = {
             backgroundImage: `url(${this.props.backgroundImage})`,
-            height: '200px'
         };
         const cameras = this.props.cameras
 
@@ -16,7 +15,10 @@ class Map extends Component{
                 <div className="layout-container" style={style}>
                     {
                         cameras.map((camera) => {
-                            return <Camera key={camera.key} camera={camera}/>
+                            if ("camera" + camera.cameraid === this.props.chosenCamera)
+                                return <Camera key={camera.cameraid} camera={camera} clickCamera={this.props.clickCamera} chosen={true}/>
+                            return <Camera key={camera.cameraid} camera={camera} clickCamera={this.props.clickCamera} chosen={false}/>
+                        
                      })
                     }
                 </div>

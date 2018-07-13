@@ -1,17 +1,20 @@
 import React, {Component} from 'react'
-
-const cameras = [{key:1, x:'10%', y:'10%', url:'camera1',area:1}, {key:2, x:'30%',y:'30%',url:'camera2',area:1}]
+import CameraRow from './CameraRow'
+import { dataApi } from '../Global'
+import { message } from 'antd'
 
 class CameraTable extends Component{
     constructor(props){
         super(props)
+
         this.state={
-            cameras:cameras,
+            cameras:null,
         }
+        this.getCamera()
     }
 
     getCamera = () => {
-        fetch(dataApi + "/camera?all=true",{
+        fetch(dataApi + "camera/all",{
             method: 'get',
             credentials: 'include'
         })
@@ -33,7 +36,7 @@ class CameraTable extends Component{
     }
 
     deleteCamera = (key) => {
-        fetch(dataApi + "/camera/delete?key=" + key,{
+        fetch(dataApi + "camera/delete?key=" + key,{
             method:'get',
             credentials: 'include'
         })
@@ -57,23 +60,26 @@ class CameraTable extends Component{
     render(){
         const cameras = this.state.cameras
         return(
-            <table>
-                <th>
-                    <tr>Key</tr>
-                    <tr>Param1</tr>
-                    <tr>Param2</tr>
-                    <tr>Param3</tr>
-                    <tr>Area</tr>
-                    <tr>Position X</tr>
-                    <tr>Position Y</tr>
-                    <tr>Action</tr>
-                    <tr/>
-                </th>
+            <table className='managementTable'>
+                <thead>
+                    <tr>
+                    <th>Cameraid</th>
+                    <th>Param1</th>
+                    <th>Param2</th>
+                    <th>Param3</th>
+                    <th>Area</th>
+                    <th>Position X</th>
+                    <th>Position Y</th>
+                    <th>Action</th>
+                    </tr>
+                </thead>
                 <tbody>
-                    {
-                        cameras.map((camera) => {
-                            <CameraRow key={camera.key} camera={camera}/>
-                        })
+                    {   
+                        cameras?cameras.map((camera) => {
+                            return (
+                                <CameraRow key={camera.key} camera={camera}/>
+                            )
+                        }):null
                     }
                 </tbody>
             </table>
