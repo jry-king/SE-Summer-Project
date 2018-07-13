@@ -1,17 +1,17 @@
 import React, {Component} from 'react'
 import { dataApi } from '../Global'
-import { message, Button } from 'antd'
+import { message, Button, Input } from 'antd'
 
 
 class CameraRow extends Component{
     constructor(props){
         super(props)
         this.state={
-            key: this.props.camera.key,
+            key: this.props.camera.cameraid,
             param1: this.props.camera.param1,
             param2: this.props.camera.param2,
             param3: this.props.camera.param3,
-            area: this.props.camera.area,
+            areaid: this.props.camera.areaid,
             x: this.props.camera.x,
             y: this.props.camera.y,
             edit: false,
@@ -19,14 +19,14 @@ class CameraRow extends Component{
             old_param1: this.props.camera.param1,
             old_param2: this.props.camera.param2,
             old_param3: this.props.camera.param3,
-            old_area: this.props.camera.area,
+            old_areaid: this.props.camera.areaid,
             old_x: this.props.camera.x,
             old_y: this.props.camera.y,
         }
     }
 
     handleDelete = () => {
-        this.props.deleteCamera(this.props.camera.key)
+        this.props.deleteCamera(this.props.camera.cameraid)
     }
 
     handleEdit = () => {
@@ -47,9 +47,9 @@ class CameraRow extends Component{
             param1: this.state.old_param1,
             param2: this.state.old_param2,
             param3: this.state.old_param3,
-            area: this.state.old_area,
+            areaid: this.state.old_areaid,
             x: this.state.old_x,
-            y: this.state. old_y,
+            y: this.state.old_y,
             edit: false
         })
     }
@@ -60,17 +60,29 @@ class CameraRow extends Component{
             this.state.param1!=="" &&
             this.state.param2!=="" &&
             this.state.param3!=="" &&
-            this.state.area!=="" &&
+            this.state.areaid!=="" &&
             this.state.x!=="" &&
             this.state.y!==""
         ){
-            let msg = "param1="+encodeURIComponent(this.state.param1)+
-            "&param2"+encodeURIComponent(this.state.param2)+
-            "&param3"+encodeURIComponent(this.state.param3)
+            let msg = {
+                "cameraid":encodeURIComponent(this.state.cameraid),
+                "param1":encodeURIComponent(this.state.param1),
+                "param2":encodeURIComponent(this.state.param2),
+                "param3":+encodeURIComponent(this.state.param3),
+                "x":+encodeURIComponent(this.state.x),
+                "y":encodeURIComponent(this.state.y),
+                "areaid":+encodeURIComponent(this.state.areaid)
+            }
 
-            fetch(dataApi+"/camera/save?"+msg, {
-                method: 'get',
+            fetch(dataApi+"camera/save", {
+                method: 'post',
                 credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: msg
+
             })
             .then(res => res.json())
             .then(
@@ -96,9 +108,10 @@ class CameraRow extends Component{
         let param1 = this.state.param1
         let param2 = this.state.param2
         let param3 = this.state.param3
-        let area = this.state.area
+        let areaid = this.state.areaid
         let x = this.state.x
         let y = this.state.y
+        let edit = this.state.edit
         if (!edit){
             return(
                 <tr>
@@ -106,7 +119,7 @@ class CameraRow extends Component{
                     <td>{param1}</td>
                     <td>{param2}</td>
                     <td>{param3}</td>
-                    <td>{area}</td>
+                    <td>{areaid}</td>
                     <td>{x}</td>
                     <td>{y}</td>
                     <td><Button type="primary" onClick={this.handleEdit}>Edit</Button></td>
@@ -128,7 +141,7 @@ class CameraRow extends Component{
                     <Input type="text" defaultValue={param3} placeholder="Param1" onChange={this.handleChange} name="param3"/>
                     </td>
                     <td>
-                    <Input type="text" defaultValue={area} placeholder="Area" onChange={this.handleChange} name="area"/>
+                    <Input type="text" defaultValue={areaid} placeholder="areaid" onChange={this.handleChange} name="areaid"/>
                     </td>
                     <td>
                     <Input type="text" defaultValue={x} placeholder="Postion X" onChange={this.handleChange} name="x"/>

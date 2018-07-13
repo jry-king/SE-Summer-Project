@@ -6,8 +6,6 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const cameras = [{key:1, x:'10%', y:'10%',param1:'param1', param2:'param2', param3:'param3', url:'camera1',area:1}, {key:2, x:'30%',y:'30%',param1:'param1', param2:'param2', param3:'param3',url:'camera2',area:1}]
-const backgroundImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEgASAMBIgACEQEDEQH/xAAYAAADAQEAAAAAAAAAAAAAAAAAAQIDBv/EABgQAQEBAQEAAAAAAAAAAAAAAAABAhEh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAEGBf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AOhkaSDMXI7jKlIrhyKkRUcHGnCsBnYixtYmxUYagXqeAFZjSRGWkRTkPhw+AQ4fAKmxFjRNgjKwHo1QstIzy0iKo0wxVFR0dQJNUmqiNAaCojNaSsM6XNA3lNlNKmkVYT0ugrqbU3SboBqhnrQVGeWmaAC5T6AA6OgAVqbSAItACj//2Q=="
 const videoType = "application/x-mpegURL"
 
 class LiveVideo extends Component {
@@ -15,16 +13,23 @@ class LiveVideo extends Component {
     constructor(props){
         super(props)
         this.state={
-            cameras: cameras,
-            videoUrl: cameras[0].url,
+            cameras: null,
+            videoUrl: null,
+            map:null,
 
             imgSrc: null,
             imageLoaded: false
         }
+        this.getMap()
+        this.getCamera()
+    }
+
+    clickCamera = (cameraid) => {
+        window.location.href = "/video/live/camera" + cameraid
     }
 
     handleClick = () => {
-        window.location.href = "/video/live/"+this.state.videoUrl;
+        window.location.href = "/video/live/" + this.state.videoUrl;
     }
 
     handleChange = (value) => {
@@ -32,7 +37,7 @@ class LiveVideo extends Component {
     }
 
     getCamera = () => {
-        fetch(dataApi + "/camera?all=false&area=1",{
+        fetch(dataApi + "camera?areaid=1",{
             method: 'get',
             credentials: 'include'
         })
@@ -48,14 +53,39 @@ class LiveVideo extends Component {
                     })
             },
             (error) => {
-                message.error(error)
+                message.error("error")
+                console.log(error)
+            }
+        )
+    }
+
+    getMap = () => {
+        fetch(dataApi + "map?areaid=1",{
+            method: 'get',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                if (result.status)
+                    message.error(result.message)
+                else
+                    this.setState({
+                        map: result.map
+                    })
+            },
+            (error) => {
+                message.error("error")
+                console.log(error)
             }
         )
     }
 
     render() {
+        const cameras = this.state.cameras
         const camera = this.props.match.params.camera
         const videoUrl = hlsServer + camera + ".m3u8"
+        const map = this.state.map
         console.log(camera)
         return (
             <div style={{ background: '#ECECEC'}}>
@@ -64,29 +94,28 @@ class LiveVideo extends Component {
                     <Icon type="eye" style={{ fontSize: 70, color: 'aliceblue' }} />
                 </header>
                 <br/>
-
-                
-                <div className="select-container">
-                    <h2>选择摄像头</h2>
-                    <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
-                    {
-                        cameras.map((camera) => {
-                            return <Option key={camera.key} id={camera.key} value={camera.url}>{"摄像头"+camera.key}</Option>
-                        })
-                    }
-                    </Select>
-                    <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
-                    <br/><br/><br/>
-                </div>
-
-                <Map cameras={cameras} backgroundImage={backgroundImage}/>
-
-                <br/><br/><br/>
                 {
-                    camera?
-					<div>
-						<VideoCrop  videoUrl={videoUrl} videoType={videoType}/>
-					</div>:null
+                    camera?<VideoCrop className='liveVideo'  videoUrl={videoUrl} videoType={videoType}/>:
+                    (
+                        cameras?
+                        <div>
+                            <div className="select-container">
+                                <h2>选择摄像头</h2>
+                                <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
+                                {
+                                    cameras.map((camera) => {
+                                        return <Option key={camera.cameraid} id={camera.cameraid} value={"camera"+camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
+                                    })
+                                }
+                                </Select>
+                                <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
+                                <br/><br/><br/>
+                            </div>
+
+                            <Map cameras={cameras} backgroundImage={map} clickCamera={this.clickCamera} chosenCamera={camera}/>
+                        </div>
+                        :null
+                    )
                 }
                 
                 <br/><br/>

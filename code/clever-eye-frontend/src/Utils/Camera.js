@@ -17,16 +17,35 @@ class Camera extends Component{
         const minusX = '-'+x
         const minusY = '-'+y
 
-        const styles = {
+        const styles = (this.props.chosen===true)?{
+            top: x,
+            left: y,
+            transform: `translate(${minusX}, ${minusY})`,
+            borderStyle: `solid`,
+            borderColor: `red`,
+            borderRadius: `5px`
+        }:{
             top: x,
             left: y,
             transform: `translate(${minusX}, ${minusY})`,
         }
 
+        const circle = {
+            top: x,
+            left: y,
+            transform: `translate(${minusX}, ${minusY})`,
+            width:`100px`,
+            height:`100px`,
+            border:`5px solid orange`,
+            borderRadius:`50px`
+        }
+
+        const cameraid = camera.cameraid
+            
         return(
             <div className="camera">
-                <Popover content={content} title={"Camera"+camera.key} trigger="hover">
-                    <Icon className='btn' style={styles} type="video-camera" />
+                <Popover content={content} title={"Camera"+cameraid} trigger="hover">
+                    <Icon className='btn' style={styles} type="video-camera" onClick={(e) => this.props.clickCamera(cameraid)}/>
                 </Popover>
             </div>
         )

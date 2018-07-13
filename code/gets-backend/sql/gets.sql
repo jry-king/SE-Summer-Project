@@ -12,15 +12,16 @@ create table cameras
 
 create table history
 (
-    id  integer NOT NULL UNIQUE AUTO_INCREMENT,
+    historyid  integer NOT NULL UNIQUE AUTO_INCREMENT,
     cameraid integer NOT NULL,
+    areaid integer NOT NULL,
     filename varchar(100) NOT NULL,
-    primary key (id)
+    primary key (historyid)
 );
 
 create table map
 (
     areaid integer NOT NULL UNIQUE AUTO_INCREMENT,
-    map varchar(50000),
+    map text,
     primary key (areaid)
 )

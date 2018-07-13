@@ -19,7 +19,6 @@ public class MapServiceImpl implements MapService{
         return mapRepository.save(mapEntity);
     }
 
-    @Override
     public void deleteByAreaid(Integer areaid) {
         mapRepository.deleteByAreaid(areaid);
     }

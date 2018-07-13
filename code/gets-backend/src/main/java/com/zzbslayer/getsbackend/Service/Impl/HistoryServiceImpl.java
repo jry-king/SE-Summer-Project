@@ -17,8 +17,8 @@ public class HistoryServiceImpl implements HistoryService{
         return historyRepository.findAll();
     }
 
-    public List<HistoryEntity> findByCameraid(Integer cameraid){
-        return historyRepository.findByCameraid(cameraid);
+    public List<HistoryEntity> findByAreaid(Integer areaid){
+        return historyRepository.findByAreaid(areaid);
     }
 
     public void deleteById(Integer id){
@@ -26,6 +26,11 @@ public class HistoryServiceImpl implements HistoryService{
     }
 
     public HistoryEntity save(HistoryEntity historyEntity) {
-        return historyRepository.save(historyEntity);
+        if (historyEntity.getHistoryid()==0)
+            return historyRepository.save(historyEntity);
+        HistoryEntity historyEntity1 = historyRepository.findByHistoryid(historyEntity.getHistoryid());
+        historyEntity1.setCameraid(historyEntity.getCameraid());
+        historyEntity1.setFilename(historyEntity.getFilename());
+        return historyRepository.save(historyEntity1);
     }
 }

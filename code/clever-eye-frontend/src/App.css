@@ -133,13 +133,8 @@
 
 }
 
-.liveVideoCrop{
-	margin-left:20%;
-}
-
-.historyVideoCrop{
-	margin-left:20%;
-
+.videoCrop{
+	margin:auto;
 }
 
 .screenShotButton{

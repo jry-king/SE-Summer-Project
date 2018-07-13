@@ -14,8 +14,8 @@ public class MapController {
 
     @GetMapping(value="/map")
     @ResponseBody
-    public String findByAreaid(@RequestParam("areaid")Integer areaid){
-        return mapService.findByAreaid(areaid).getMap();
+    public MapEntity findByAreaid(@RequestParam("areaid")Integer areaid){
+        return mapService.findByAreaid(areaid);
     }
 
     @PostMapping(value="/map/save")
