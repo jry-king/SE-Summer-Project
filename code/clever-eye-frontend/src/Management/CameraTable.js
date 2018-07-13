@@ -60,7 +60,7 @@ class CameraTable extends Component{
     render(){
         const cameras = this.state.cameras
         return(
-            <table>
+            <table className='managementTable'>
                 <thead>
                     <tr>
                     <th>Cameraid</th>

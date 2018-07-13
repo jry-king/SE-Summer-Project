@@ -10,13 +10,13 @@ class Management extends Component{
 
     render(){
         return (
-            <div style={{ background: '#ECECEC'}}>
+            <div  style={{ background: '#ECECEC'}}>
                 <header className="App-header">
                     <Header title="信息管理"/>
                     <Icon type="book" style={{ fontSize: 70, color: 'aliceblue' }} />
                 </header>
                 <br/>
-
+				
                 <Tabs defaultActiveKey="1">
                     <TabPane tab="Camera" key="1"><CameraTable/></TabPane>
                     <TabPane tab="Map" key="2"><MapManagement/></TabPane>
