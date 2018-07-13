@@ -6,10 +6,6 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const cameras = [{key:1, x:'10%', y:'10%',param1:'param1', param2:'param2', param3:'param3', url:'camera1',area:1}, {key:2, x:'30%',y:'30%',param1:'param1', param2:'param2', param3:'param3',url:'camera2',area:1}]
-const backgroundImage = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAEgASAMBIgACEQEDEQH/xAAYAAADAQEAAAAAAAAAAAAAAAAAAQIDBv/EABgQAQEBAQEAAAAAAAAAAAAAAAABAhEh/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAEGBf/EABQRAQAAAAAAAAAAAAAAAAAAAAD/2gAMAwEAAhEDEQA/AOhkaSDMXI7jKlIrhyKkRUcHGnCsBnYixtYmxUYagXqeAFZjSRGWkRTkPhw+AQ4fAKmxFjRNgjKwHo1QstIzy0iKo0wxVFR0dQJNUmqiNAaCojNaSsM6XNA3lNlNKmkVYT0ugrqbU3SboBqhnrQVGeWmaAC5T6AA6OgAVqbSAItACj//2Q=="
-
-const history = [{id:1, key:1, file:"test"},{id:2, key:1, file:"test2"},{id:3, key:2, file:"test3"}]
 const videoType = "video/webm"
 
 class HistoryVideo extends Component {
@@ -18,40 +14,23 @@ class HistoryVideo extends Component {
         super(props)
         this.state={
             videoUrl: null,
-            cameras: cameras,
+            cameras: null,
+            map: null,
+            history: null,
 
-            cameraChosen: "camera1",
-            chosenHistory: this.getChosenHistory(1),
+            chosenCamera: null,
+            chosenHistory: null,
             
             imgSrc: null,
             imageLoaded: false
         }
-    }
-
-    handleClick = () => {
-        window.location.href = "/video/history/"+encodeURIComponent(this.state.videoUrl);
-    }
-
-    handleChangeCamera = (value) => {
-        this.setState({cameraChosen:"camera"+value})
-        this.setState({chosenHistory: this.getChosenHistory(value)})
-    }
-	
-	handleChangeFragment = (value) => {
-        this.setState({videoUrl: this.state.cameraChosen + "/" + value})
-    }
-
-    getChosenHistory = (key) => {
-        let result = []
-        for (let i in history){
-            if (history[i].key === key)
-                result.push(history[i])
-        }
-        return result
+        this.getCamera()
+        this.getMap()
+        this.getHistory()
     }
 
     getCamera = () => {
-        fetch(dataApi + "/camera?all=false&area=1",{
+        fetch(dataApi + "camera?areaid=1",{
             method: 'get',
             credentials: 'include'
         })
@@ -63,66 +42,148 @@ class HistoryVideo extends Component {
                 else
                     this.setState({
                         cameras: result,
-                        videoUrl: result[0].url
+                        videoUrl: result[0].url,
+                        chosenCamera: "camera" + result[0].key,
                     })
             },
             (error) => {
-                message.error(error)
+                message.error("error")
+                console.log(error)
             }
         )
     }
 
+    getMap = () => {
+        fetch(dataApi + "map?areaid=1",{
+            method: 'get',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                if (result.status)
+                    message.error(result.message)
+                else
+                    this.setState({
+                        map: result.map
+                    })
+            },
+            (error) => {
+                message.error("error")
+                console.log(error)
+            }
+        )
+    }
+
+    getHistory = () => {
+        fetch(dataApi + "history?areaid=1",{
+            method: 'get',
+            credentials: 'include'
+        })
+        .then(res => res.json())
+        .then(
+            (result) => {
+                if (result.status)
+                    message.error(result.message)
+                else{
+                    console.log(result)
+                    this.setState({
+                        history: result
+                    })
+                }
+            },
+            (error) => {
+                message.error("error")
+                console.log(error)
+            }
+        )
+    }
+
+    clickCamera = (cameraid) => {
+        this.setState({chosenCamera:"camera"+cameraid})
+        this.setState({chosenHistory: this.getChosenHistory(cameraid, this.state.history)})
+    }
+
+    handleClick = () => {
+        window.location.href = "/video/history/"+encodeURIComponent(this.state.videoUrl);
+    }
+
+    handleChangeCamera = (value) => {
+        this.setState({chosenCamera:"camera"+value})
+        console.log(value)
+        console.log(this.state.history)
+        this.setState({chosenHistory: this.getChosenHistory(value, this.state.history)})
+    }
+	
+	handleChangeFragment = (value) => {
+        this.setState({videoUrl: this.state.chosenCamera + "/" + value})
+    }
+
+    getChosenHistory = (cameraid, history) => {
+        let result = []
+        for (let i in history){
+            if (history[i].cameraid === cameraid)
+                result.push(history[i])
+        }
+        return result
+    }
+
     render() {
         const file = this.props.match.params.file
+
         const videoUrl = videoServer + decodeURIComponent(file) + ".webm"
         const history = this.state.chosenHistory
+        const cameras = this.state.cameras
+        const map = this.state.map
+
+        const chosenCamera = file?file.split('/')[0]:this.state.chosenCamera
 
         console.log(history)
         return (
-            <div style={{ background: '#ECECEC'}}>
+            <div className="big-container" style={{ background: '#ECECEC'}}>
                 <header className="App-header">
                     <Header title="历史视频"/>
                     <Icon type="eye" style={{ fontSize: 70, color: 'aliceblue' }} />
                 </header>
                 <br/>
-
-                
-                <div className="select-container">
-                    <h2>选择摄像头</h2>
-                    <Select defaultValue="camera1" style={{ width: 120 }} onChange={this.handleChangeCamera}>
-                    {
-                        cameras.map((camera) => {
-                            return <Option key={camera.key} id={camera.key} value={camera.key}>{"摄像头"+camera.key}</Option>
-                        })
-                    }
-                    </Select>
-
-                    <br/><br/><br/>
-                </div>
-				
-				<div>
-                    {
-                        history?
-                        <div className="select-container">
-                            <h2>选择视频片段</h2>
-                            <Select defaultActiveFirstOption={true} style={{ width: 120 }} onChange={this.handleChangeFragment}>
-                            {
-                                history.map((h) => {
-                                    return <Option key={h.key} id={h.key} value={h.file}>{h.file}</Option>
-                                })
-                            }
-                            </Select>
-                            <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
-                            <br/><br/><br/>
-                        </div>:<div>"No history available"</div>
-                    }
-				</div>
-
-                <Map cameras={cameras} backgroundImage={backgroundImage}/>
-
-                <br/><br/><br/>
                 {
-                    file?<VideoCrop videoUrl={videoUrl} videoType={videoType}/>:null
+                    file?<VideoCrop videoUrl={videoUrl} videoType={videoType}/>:
+                    (
+                        cameras?
+                        <div>
+                            <div className="select-container">
+                                <h2>选择摄像头</h2>
+                                <Select default={chosenCamera} style={{ width: 120 }} onChange={this.handleChangeCamera}>
+                                {
+                                    cameras.map((camera) => {
+                                        return <Option key={camera.cameraid} id={camera.cameraid} value={camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
+                                    })
+                                }
+                                </Select>
+
+                                <br/><br/><br/>
+                            </div>
+                            <div>
+                            {
+                                history?
+                                <div className="select-container">
+                                    <h2>选择视频片段</h2>
+                                    <Select style={{ width: 120 }} onChange={this.handleChangeFragment}>
+                                    {
+                                        history.map((h) => {
+                                            return <Option key={h.historyid} id={h.historyid} value={h.filename}>{h.filename}</Option>
+                                        })
+                                    }
+                                    </Select>
+                                    <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
+                                    <br/><br/><br/>
+                                </div>:null
+                            }
+                            </div>
+                            <Map cameras={cameras} backgroundImage={map} clickCamera={this.clickCamera} chosenCamera={chosenCamera}/>
+                        </div>
+                        :null
+                    )
                 }
                 
                 <br/><br/>
