@@ -147,7 +147,7 @@ class HistoryVideo extends Component {
                 </header>
                 <br/>
                 {
-                    file?<VideoCrop videoUrl={videoUrl} videoType={videoType}/>:
+                    file?<VideoCrop className="videoCrop" videoUrl={videoUrl} videoType={videoType}/>:
                     (
                         cameras?
                         <div>
