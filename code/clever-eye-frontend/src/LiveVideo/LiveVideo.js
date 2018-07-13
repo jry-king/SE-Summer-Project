@@ -88,7 +88,7 @@ class LiveVideo extends Component {
         const map = this.state.map
         console.log(camera)
         return (
-            <div className="big-container" style={{ background: '#ECECEC'}}>
+            <div style={{ background: '#ECECEC'}}>
                 <header className="App-header">
                     <Header title="实时监控"/>
                     <Icon type="eye" style={{ fontSize: 70, color: 'aliceblue' }} />

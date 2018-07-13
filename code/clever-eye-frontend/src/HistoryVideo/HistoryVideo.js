@@ -140,7 +140,7 @@ class HistoryVideo extends Component {
 
         console.log(history)
         return (
-            <div className="big-container" style={{ background: '#ECECEC'}}>
+            <div style={{ background: '#ECECEC'}}>
                 <header className="App-header">
                     <Header title="历史视频"/>
                     <Icon type="eye" style={{ fontSize: 70, color: 'aliceblue' }} />

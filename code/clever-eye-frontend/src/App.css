@@ -134,14 +134,7 @@
 }
 
 .videoCrop{
-	margin-left:20%;
-}
-
-.big-container {
-  margin: auto;
-  padding: 10px;
-  width: 1200px;
-  margin-top: 10px;
+	margin:auto;
 }
 
 .screenShotButton{
