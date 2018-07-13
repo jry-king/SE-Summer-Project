@@ -39,16 +39,11 @@
   margin-top: 10px;
 }
 
+
 .video-container {
-  margin-left:20%;
   width: 20%;
   height: 20%;
 }
-
-.video {
-  margin-left:20%;
-}
-
 
 
 .layout-container {
@@ -69,20 +64,30 @@
   border-radius: 2px;
 }
 
+.monitorImage{
+  margin-left:auto;
+  margin-right:auto;
+  width: 50%;
+  height: 50%;
+}
+
 .initialImage{
-  margin-left:600px;
-  width: 600px;
-  height: 600px;
+  margin-left:auto;
+  margin-right:auto;
+  width: 100%;
+  height: 100%;
 }
 
 .after-img{
-  width: 30%;
-  height: 30%;
+  margin-left:auto;
+  margin-right:auto;
+  width: 50%;
+  height: 50%;
 }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to { transform: rotae(360deg); }
 }
 
 .App-logo {
@@ -128,6 +133,19 @@
 
 }
 
-.liveVideo{
+.liveVideoCrop{
 	margin-left:20%;
+}
+
+.historyVideoCrop{
+	margin-left:20%;
+
+}
+
+.screenShotButton{
+	margin-right:27%;
+}
+
+.monitorTitle{
+	margin-right:27%;
 }

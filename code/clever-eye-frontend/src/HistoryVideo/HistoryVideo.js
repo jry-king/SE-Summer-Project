@@ -122,7 +122,11 @@ class HistoryVideo extends Component {
 
                 <br/><br/><br/>
                 {
-                    file?<VideoCrop videoUrl={videoUrl} videoType={videoType}/>:null
+                    file?
+					<div>
+						<VideoCrop videoUrl={videoUrl} videoType={videoType}/>
+					</div>
+					:null
                 }
                 
                 <br/><br/>

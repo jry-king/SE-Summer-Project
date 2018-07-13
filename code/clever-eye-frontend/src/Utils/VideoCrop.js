@@ -44,12 +44,13 @@ class VideoCrop extends Component {
     render(){
         const style = {
             visibility: this.props.visibility
+
         }
         console.log(this.props.videoUrl)
 
         return(
-            <div style={style}>
-                <h2>监控画面</h2>
+            <div className='monitorImage' style={style}>
+                <h2 >监控画面</h2>
                 <div className="video-container" 
                     alt="snap"
                     key="media"
@@ -72,7 +73,7 @@ class VideoCrop extends Component {
                 <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
 				
-				<div>
+				<div className='initialImage'>
 				{
 					this.state.imgSrc?
 					<div>
@@ -80,7 +81,6 @@ class VideoCrop extends Component {
 					{
 						<Cropper src={this.state.imgSrc}
 						ref={ref => { this.image = ref }}
-						className ="initialImage"
 						/> 
 						}
 					</div>
@@ -97,7 +97,7 @@ class VideoCrop extends Component {
                 }
 				</div>
 				
-				<div>
+				<div className="after-img">
 				{
 					this.state.image?
 					<div>
@@ -105,7 +105,6 @@ class VideoCrop extends Component {
 						{
 							<div>
 							<img
-								className="after-img"
 								src={this.state.image}
 								alt=""
 							/>
