@@ -17,7 +17,7 @@ public class HistoryController {
 
     @GetMapping("/history")
     @ResponseBody
-    public List<HistoryEntity> findByAreaid(@RequestParam("areaid")Integer areaid){
+    public List<HistoryEntity> findByAreaid(@RequestParam("arecaid")Integer areaid){
         return historyService.findByAreaid(areaid);
     }
 
@@ -36,7 +36,7 @@ public class HistoryController {
     @DeleteMapping(value = "/history/delete")
     @Transactional
     @ResponseBody
-    public void deleteByCameraid(@RequestParam("id")Integer id){
-        historyService.deleteById(id);
+    public void deleteByCameraid(@RequestParam("historyid")Integer historyid){
+        historyService.deleteByHistoryid(historyid);
     }
 }
