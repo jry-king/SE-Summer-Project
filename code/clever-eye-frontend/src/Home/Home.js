@@ -13,7 +13,7 @@ class Home extends Component {
               <Header title="GETS"/>
               <img src={logo} className="App-logo" alt="logo" />
           </header></div>
-          <div style={{ background: '#ECECEC', padding: '30px', height:'400px' }}>
+          <div style={{ background: '#ECECEC', padding: '30px', height:'800px' }}>
               <br/><br/>
               <Link to='/video/live'><Button type="primary" icon="eye" size="large" className ='homebutton1'>实时监控</Button></Link>
               <Link to='/video/history'><Button type="primary" icon="search" size="large" className ='homebutton2'>历史视频</Button></Link>

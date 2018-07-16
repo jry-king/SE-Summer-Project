@@ -61,7 +61,7 @@ class CameraRow extends Component{
             this.state.param2!=="" &&
             this.state.param3!=="" &&
             this.state.areaid!=="" &&
-            this.state.x!=="" &&
+            this.state.x!=="" &&	
             this.state.y!==""
         ){
             let msg = {
@@ -99,8 +99,6 @@ class CameraRow extends Component{
                 }
             )
         }
-        else
-            message.error("Parameters Cannot Be Empty")
     }
 
     render(){
