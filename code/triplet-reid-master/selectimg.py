@@ -11,6 +11,7 @@ import tensorflow as tf
 
 from aggregators import AGGREGATORS
 import common
+import loss
 
 parser = ArgumentParser(description='Embed the query set and the gallery set using a trained network,'
                                     'then use those embeddings to select the identities in query images from gallery.')
@@ -150,9 +151,6 @@ def main():
         for key, value in sorted(vars(args).items()):
             print('{}: {}'.format(key, value))
 
-    # Load the data from the CSV file.
-    # _, data_fids = common.load_dataset(args.dataset, args.image_root)
-
     # Load the query and gallery data from the CSV files.
     query_pids, query_fids = common.load_dataset(args.query_dataset, None)
     gallery_pids, gallery_fids = common.load_dataset(args.gallery_dataset, None)
@@ -160,17 +158,19 @@ def main():
     net_input_size = (args.net_input_height, args.net_input_width)
     pre_crop_size = (args.pre_crop_height, args.pre_crop_width)
 
-    # Setup a tf Dataset containing all images.
-    # dataset = tf.data.Dataset.from_tensor_slices(data_fids)
-
     # Setup tf Datasets containing all images of query set and gallery set separately.
     queryset = tf.data.Dataset.from_tensor_slices(query_fids)
     galleryset = tf.data.Dataset.from_tensor_slices(gallery_fids)
 
     # Convert filenames to actual image tensors.
-    dataset = dataset.map(
+    queryset = queryset.map(
         lambda fid: common.fid_to_image(
-            fid, tf.constant('dummy'), image_root=args.image_root,
+            fid, tf.constant('dummy'), image_root=args.query_image_root,
+            image_size=pre_crop_size if args.crop_augment else net_input_size),
+        num_parallel_calls=args.loading_threads)
+    galleryset = galleryset.map(
+        lambda fid: common.fid_to_image(
+            fid, tf.constant('dummy'), image_root=args.gallery_image_root,
             image_size=pre_crop_size if args.crop_augment else net_input_size),
         num_parallel_calls=args.loading_threads)
 
@@ -178,6 +178,7 @@ def main():
     # `modifiers` is a list of strings that keeps track of which augmentations
     # have been applied, so that a human can understand it later on.
     modifiers = ['original']
+    '''
     if args.flip_augment:
         dataset = dataset.map(flip_augment)
         dataset = dataset.apply(tf.contrib.data.unbatch())
@@ -199,24 +200,36 @@ def main():
         modifiers = [o + '_avgpool' for o in modifiers]
     else:
         modifiers = [o + '_resize' for o in modifiers]
+    '''
 
     # Group it back into PK batches.
-    dataset = dataset.batch(args.batch_size)
+    queryset = queryset.batch(args.batch_size)
+    galleryset = galleryset.batch(args.batch_size)
 
     # Overlap producing and consuming.
-    dataset = dataset.prefetch(1)
+    queryset = queryset.prefetch(1)
+    galleryset = galleryset.prefetch(1)
 
-    images, _, _ = dataset.make_one_shot_iterator().get_next()
+    queryimages, _, _ = queryset.make_one_shot_iterator().get_next()
+    galleryimages, _, _ = galleryset.make_one_shot_iterator().get_next()
 
     # Create the model and an embedding head.
     model = import_module('nets.' + args.model_name)
     head = import_module('heads.' + args.head_name)
 
-    endpoints, body_prefix = model.endpoints(images, is_training=False)
-    with tf.name_scope('head'):
-        endpoints = head.head(endpoints, args.embedding_dim, is_training=False)
+    with tf.variable_scope(tf.get_variable_scope(), reuse=tf.AUTO_REUSE):
+        query_endpoints, query_body_prefix = model.endpoints(queryimages, is_training=False)
+        gallery_endpoints, gallery_body_prefix = model.endpoints(galleryimages, is_training=False)
+        with tf.name_scope('head'):
+            query_endpoints = head.head(query_endpoints, args.embedding_dim, is_training=False)
+            gallery_endpoints = head.head(gallery_endpoints, args.embedding_dim, is_training=False)
 
-    with h5py.File(args.filename, 'w') as f_out, tf.Session() as sess:
+    # These are collected here before we add the optimizer, because depending
+    # on the optimizer, it might add extra slots, which are also global
+    # variables, with the exact same prefix.
+    model_variables = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES, query_body_prefix)
+
+    with tf.Session() as sess:
         # Initialize the network/load the checkpoint.
         if args.checkpoint is None:
             checkpoint = tf.train.latest_checkpoint(args.experiment_root)
@@ -224,23 +237,37 @@ def main():
             checkpoint = os.path.join(args.experiment_root, args.checkpoint)
         if not args.quiet:
             print('Restoring from checkpoint: {}'.format(checkpoint))
-        tf.train.Saver().restore(sess, checkpoint)
+        sess.run(tf.global_variables_initializer())
+        saver = tf.train.Saver(model_variables)
+        saver.restore(sess, checkpoint)
 
         # Go ahead and embed the whole dataset, with all augmented versions too.
-        emb_storage = np.zeros(
-            (len(data_fids) * len(modifiers), args.embedding_dim), np.float32)
-        for start_idx in count(step=args.batch_size):
+        query_embs = np.zeros(
+            (len(query_fids) * len(modifiers), args.embedding_dim), np.float32)
+        for start_idx1 in count(step=args.batch_size):
             try:
-                emb = sess.run(endpoints['emb'])
+                queryemb = sess.run(query_endpoints['emb'])
                 print('\rEmbedded batch {}-{}/{}'.format(
-                        start_idx, start_idx + len(emb), len(emb_storage)),
+                        start_idx1, start_idx1 + len(queryemb), len(query_embs)),
                     flush=True, end='')
-                emb_storage[start_idx:start_idx + len(emb)] = emb
-                print(emb)
+                query_embs[start_idx1:start_idx1 + len(queryemb)] = queryemb
+            except tf.errors.OutOfRangeError:
+                break  # This just indicates the end of the dataset.
+
+        gallery_embs = np.zeros(
+            (len(gallery_fids) * len(modifiers), args.embedding_dim), np.float32)
+        for start_idx2 in count(step=args.batch_size):
+            try:
+                galleryemb = sess.run(gallery_endpoints['emb'])
+                print('\rEmbedded batch {}-{}/{}'.format(
+                    start_idx2, start_idx2 + len(galleryemb), len(gallery_embs)),
+                      flush=True, end='')
+                gallery_embs[start_idx2:start_idx2 + len(galleryemb)] = galleryemb
             except tf.errors.OutOfRangeError:
                 break  # This just indicates the end of the dataset.
 
         print()
+        '''
         if not args.quiet:
             print("Done with embedding, aggregating augmentations...", flush=True)
 
@@ -261,7 +288,40 @@ def main():
         # Store information about the produced augmentation and in case no crop
         # augmentation was used, if the images are resized or avg pooled.
         f_out.create_dataset('augmentation_types', data=np.asarray(modifiers, dtype='|S'))
+        '''
 
+    print()
+    # Just a quick sanity check that both have the same embedding dimension!
+    query_dim = query_embs.shape[1]
+    gallery_dim = gallery_embs.shape[1]
+    if query_dim != gallery_dim:
+        raise ValueError('Shape mismatch between query ({}) and gallery ({}) '
+                         'dimension'.format(query_dim, gallery_dim))
+
+    # We go through the queries in batches, but we always need the whole gallery
+    batch_pids, batch_fids, batch_embs = tf.data.Dataset.from_tensor_slices(
+        (query_pids, query_fids, query_embs)
+    ).batch(args.batch_size).make_one_shot_iterator().get_next()
+
+    batch_distances = loss.cdist(batch_embs, gallery_embs, metric=args.metric)
+
+    # Loop over the query embeddings.
+    with tf.Session() as session:
+        for start_idx in count(step=args.batch_size):
+            try:
+                # Compute distance to all gallery embeddings
+                distances, pids, fids = session.run([
+                    batch_distances, batch_pids, batch_fids])
+                print('\rEvaluating batch {}-{}/{}'.format(
+                        start_idx, start_idx + len(fids), len(query_fids)),
+                      flush=True, end='')
+                print()
+            except tf.errors.OutOfRangeError:
+                print()  # Done!
+                break
+
+            for i in range(len(distances)):
+                print(gallery_fids[np.argsort(distances[i])[0]])
 
 if __name__ == '__main__':
     main()
