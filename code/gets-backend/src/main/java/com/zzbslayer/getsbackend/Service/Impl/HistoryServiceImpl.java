@@ -21,7 +21,7 @@ public class HistoryServiceImpl implements HistoryService{
         return historyRepository.findByAreaid(areaid);
     }
 
-    public void deleteById(Integer id){
+    public void deleteByHistoryid(Integer id){
         historyRepository.deleteById(id);
     }
 
