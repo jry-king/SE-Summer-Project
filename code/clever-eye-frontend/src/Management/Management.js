@@ -10,7 +10,7 @@ class Management extends Component{
 
     render(){
         return (
-            <div  style={{ background: '#ECECEC'}}>
+            <div className='managementDiv' style={{ background: '#ECECEC',height:'800px'}}>
                 <header className="App-header">
                     <Header title="信息管理"/>
                     <Icon type="book" style={{ fontSize: 70, color: 'aliceblue' }} />
