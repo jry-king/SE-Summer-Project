@@ -9,7 +9,7 @@ public interface HistoryService {
 
     List<HistoryEntity> findByAreaid(Integer areaid);
 
-    void deleteById(Integer id);
+    void deleteByHistoryid(Integer id);
 
     HistoryEntity save(HistoryEntity historyEntity);
 }
