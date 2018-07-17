@@ -10,3 +10,7 @@
 
 - Tensorflow Serving
 - Jupyter Notebook
+
+# 7.17
+
+- gravitee.io / api gateway
