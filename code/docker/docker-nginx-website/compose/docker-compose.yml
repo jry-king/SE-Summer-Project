@@ -1,0 +1,21 @@
+version: '2'
+services:
+  gets-nginx:
+    image: nginx:latest
+    volumes:
+    - /root/website/nginx.conf:/etc/nginx/conf.d/default.conf
+    - /root/website/build:/usr/share/nginx/html
+    - /root/website/logs:/var/log/nginx
+    - /root/video:/opt/video
+    command:
+    - /bin/bash
+    - -c
+    - nginx -g 'daemon off;'
+  website-loadbalance:
+    image: rancher/lb-service-haproxy:v0.9.1
+    ports:
+    - 80:80/tcp
+    labels:
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      io.rancher.container.create_agent: 'true'
