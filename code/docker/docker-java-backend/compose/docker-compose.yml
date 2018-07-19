@@ -9,10 +9,4 @@ services:
       io.rancher.container.agent_service.drain_provider: 'true'
       io.rancher.container.create_agent: 'true'
   gets-backend:
-    image: openjdk:8u111
-    volumes:
-    - /root/backend/gets-backend-0.0.1-SNAPSHOT.jar:/home/gets-backend-0.0.1-SNAPSHOT.jar
-    command:
-    - /bin/bash
-    - -c
-    - java -jar /home/gets-backend-0.0.1-SNAPSHOT.jar
+    image: zzbslayer/gets-backend:latest
