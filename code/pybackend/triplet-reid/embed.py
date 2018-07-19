@@ -53,6 +53,7 @@ parser.add_argument(
     '--quiet', action='store_true', default=False,
     help='Don\'t be so verbose.')
 
+
 def main():
     # Verify that parameters are set correctly.
     args = parser.parse_args()
@@ -135,8 +136,7 @@ def main():
             try:
                 emb = sess.run(endpoints['emb'])
                 print('\rEmbedded batch {}-{}/{}'.format(
-                        start_idx, start_idx + len(emb), len(emb_storage)),
-                    flush=True, end='')
+                        start_idx, start_idx + len(emb), len(emb_storage)), flush=True, end='')
                 emb_storage[start_idx:start_idx + len(emb)] = emb
             except tf.errors.OutOfRangeError:
                 break  # This just indicates the end of the dataset.
@@ -149,6 +149,7 @@ def main():
         # Store information about the produced augmentation and in case no crop
         # augmentation was used, if the images are resized or avg pooled.
         f_out.create_dataset('augmentation_types', data=np.asarray(modifiers, dtype='|S'))
+
 
 if __name__ == '__main__':
     main()

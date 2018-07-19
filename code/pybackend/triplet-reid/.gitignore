@@ -1,0 +1,10 @@
+__pycache__
+*.pyc
+
+/results
+/resultsdata
+/test
+/testdata
+/experiment
+/Market-1501
+/pretrained

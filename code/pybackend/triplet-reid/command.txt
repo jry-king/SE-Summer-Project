@@ -1,0 +1,15 @@
+python  train.py --train_set  data\market1501_train.csv --image_root Market-1501 --experiment_root  experiment --initial_checkpoint pretrained\checkpoint-25000 --train_iterations 10
+python  embed.py --experiment_root  experiment --dataset  data\market1501_query.csv --filename test_embeddings.h5 --checkpoint F:\MachineLearning\triplet-reid\pretrained\checkpoint_25000
+python  evaluate.py --excluder market1501 --query_dataset  data\market1501_query.csv --query_embeddings  experiment\query_embeddings.h5 --gallery_dataset  data\market1501_test.csv --gallery_embeddings  experiment\test_embeddings.h5 --metric euclidean --filename  experiment\market1501_evaluation.json
+
+python  embed.py --experiment_root  experiment --dataset  testdata\test_query.csv --filename testquery_embeddings.h5 --image_root F:\MachineLearning\triplet-reid\test\query
+python  embed.py --experiment_root  experiment --dataset  testdata\test_gallery.csv --filename testgallery_embeddings.h5 --image_root F:\MachineLearning\triplet-reid\test\gallery
+python  evaluate.py --excluder diagonal --query_dataset  testdata\test_query.csv --query_embeddings  testquery_embeddings.h5 --gallery_dataset  testdata\test_gallery.csv --gallery_embeddings  testgallery_embeddings.h5 --metric euclidean --filename  experiment\test_evaluation.json
+
+python embed.py --experiment_root experiment --dataset  resultsdata\results_query.csv --filename experiment\resultsquery_embeddings.h5 --image_root F:\MachineLearning\triplet-reid\results\query
+python embed.py --experiment_root  experiment --dataset  resultsdata\results_gallery.csv --filename experiment\resultsgallery_embeddings.h5 --image_root F:\MachineLearning\triplet-reid\results\gallery
+python evaluate.py --excluder diagonal --query_dataset  resultsdata\results_query.csv --query_embeddings experiment\resultsquery_embeddings.h5 --gallery_dataset  resultsdata\results_gallery.csv --gallery_embeddings experiment\resultsgallery_embeddings.h5 --metric euclidean
+
+python selectimg.py --experiment_root experiment --query_dataset resultsdata\results_query.csv --gallery_dataset resultsdata\results_gallery.csv --query_image_root F:\MachineLearning\triplet-reid\results\query --gallery_image_root F:\MachineLearning\triplet-reid\results\gallery --metric euclidean --quiet
+
+python reid.py --experiment_root experiment --query_dataset resultsdata\results_query.csv --gallery_dataset resultsdata\results_gallery.csv --query_image_root F:\MachineLearning\triplet-reid\results\query --gallery_image_root F:\MachineLearning\triplet-reid\results\gallery --query_filename experiment\resultsquery_embeddings.h5 --gallery_filename experiment\resultsgallery_embeddings.h5

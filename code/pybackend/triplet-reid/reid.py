@@ -36,11 +36,13 @@ parser.add_argument(
     help='Name of the HDF5 file in which to store the embeddings of gallery images, relative to'
          ' the `experiment_root` location. If omitted, appends `_embeddings.h5` to the dataset name.')
 
-def main():
+
+def reid():
     args = parser.parse_args()
     os.system("python embed.py --quiet --experiment_root " + args.experiment_root + " --dataset " + args.query_dataset + " --filename " + args.query_filename + " --image_root " + args.query_image_root)
     os.system("python embed.py --quiet --experiment_root " + args.experiment_root + " --dataset " + args.gallery_dataset + " --filename " + args.gallery_filename + " --image_root " + args.gallery_image_root)
     os.system("python evaluate.py --excluder diagonal --query_dataset " + args.query_dataset + " --query_embeddings " + args.query_filename + " --gallery_dataset " +  args.gallery_dataset + " --gallery_embeddings " +  args.gallery_filename + " --metric euclidean")
 
+
 if __name__ == '__main__':
-    main()
+    reid()

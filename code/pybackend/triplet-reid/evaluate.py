@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-from argparse import ArgumentParser, FileType
+from argparse import ArgumentParser
 from importlib import import_module
 from itertools import count
-import os
 
 import h5py
-import json
 import numpy as np
-from sklearn.metrics import average_precision_score
 import tensorflow as tf
 
 import common
