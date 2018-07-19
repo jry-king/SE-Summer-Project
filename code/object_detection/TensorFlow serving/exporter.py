@@ -317,10 +317,11 @@ def _export_inference_graph(input_type,
   placeholder_tensor, input_tensors = input_placeholder_fn_map[input_type](
       **placeholder_args)
   inputs = tf.to_float(input_tensors)
-  preprocessed_inputs = detection_model.preprocess(inputs)
-  output_tensors = detection_model.predict(preprocessed_inputs)
-  postprocessed_tensors = detection_model.postprocess(output_tensors)
-  outputs = _add_output_tensor_nodes(postprocessed_tensors,
+  preprocessed_inputs, true_image_shapes = detection_model.preprocess(inputs)
+  output_tensors = detection_model.predict(
+      preprocessed_inputs, true_image_shapes)
+  postprocessed_tensors = detection_model.postprocess(
+      output_tensors, true_image_shapes)  outputs = _add_output_tensor_nodes(postprocessed_tensors,
                                      output_collection_name)
   # Add global step to the graph.
   slim.get_or_create_global_step()
