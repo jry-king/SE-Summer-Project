@@ -15,11 +15,6 @@ class VideoCrop extends Component {
         }
     }
 
-    componentWillUnmount = () => {
-        this.player && this.player.dispose();
-        this.player = null;
-    }
-
     captureOnClick = () => {
         let video = this.refs.video;
         let scale = 1;
@@ -42,14 +37,10 @@ class VideoCrop extends Component {
     }
 
     render(){
-        const style = {
-            visibility: this.props.visibility
-
-        }
         console.log(this.props.videoUrl)
 
         return(
-            <div className='monitorImage' style={style}>
+            <div className='monitorImage'>
                 <h2 >监控画面</h2>
                 <div className="video-container" 
                     alt="snap"
