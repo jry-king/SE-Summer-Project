@@ -37,8 +37,6 @@ class VideoCrop extends Component {
     }
 
     render(){
-        console.log(this.props.videoUrl)
-
         return(
             <div className='monitorImage'>
                 <h2 >监控画面</h2>
