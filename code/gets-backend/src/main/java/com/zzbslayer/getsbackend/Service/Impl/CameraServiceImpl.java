@@ -29,7 +29,8 @@ public class CameraServiceImpl implements CameraService{
         if (camerasEntity.getCameraid()==0)
             return cameraRepository.save(camerasEntity);
         CamerasEntity camerasEntity1 = cameraRepository.findByCameraid(camerasEntity.getCameraid());
-
+        if (camerasEntity1 == null)
+            return cameraRepository.save(camerasEntity);
         camerasEntity1.setAreaid(camerasEntity.getAreaid());
         camerasEntity1.setParam1(camerasEntity.getParam1());
         camerasEntity1.setParam2(camerasEntity.getParam2());

@@ -21,6 +21,8 @@
   },
   "devDependencies": {
     "babel-plugin-import": "^1.8.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "react-app-rewired": "^1.5.2"
   }
 }
