@@ -223,21 +223,24 @@ class CameraTable extends Component{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: msg
+                body: JSON.stringify(msg)
 
             })
             .then(res => res.json())
             .then(
                 (result)=>{
-                    if (result.status)
-                        message.error("Edit Error:\n"+result.msg)
+                    if (result.status){
+                        message.error("Edit Error")
+                        console.log(result.message)
+                    }
                     else {
                         message.success("Edit Success")
                         this.setState({edit:false})
                     }
                 },
                 (error) => {
-                    message.error("Edit Error:\n"+error)
+                    message.error("Network Error")
+                    console.log(error)
                 }
             )
         }
@@ -344,7 +347,3 @@ class CameraTable extends Component{
     }
 }
 export default CameraTable
-
-
-
-

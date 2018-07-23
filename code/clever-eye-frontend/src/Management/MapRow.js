@@ -16,7 +16,7 @@ class MapRow extends Component {
         }
     }
     handleDelete = () => {
-        this.props.deleteMap(this.props.map.mapid)
+        this.props.deleteMap(this.props.map.areaid)
     }
 
     handleEdit = () => {
@@ -47,6 +47,7 @@ class MapRow extends Component {
                 "map":encodeURIComponent(this.state.map),
                 "areaid":encodeURIComponent(this.state.areaid)
             }
+            console.log(msg)
 
             fetch(dataApi+"map/save", {
                 method: 'post',
@@ -55,14 +56,16 @@ class MapRow extends Component {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: msg
+                body: JSON.stringify(msg)
 
             })
             .then(res => res.json())
             .then(
                 (result)=>{
-                    if (result.status)
-                        message.error("Edit Error:\n"+result.msg)
+                    if (result.status){
+                        message.error("Edit Error")
+                        console.log(result.message)
+                    }
                     else {
                         message.success("Edit Success")
                         this.setState({edit:false})
@@ -85,7 +88,7 @@ class MapRow extends Component {
             return(
                 <tr>
                     <td>{mapid}</td>
-                    <td><img src={map} alt={"map"+mapid} width={50} height={50}/></td>
+                    <td><img src={map} alt={"map"+areaid} width={50} height={50}/></td>
                     <td>{areaid}</td>
                     <td><Button color="primary" onClick={this.handleEdit}>Edit</Button></td>
                     <td><Button type="danger" onClick={this.handleDelete}>Delete</Button></td>

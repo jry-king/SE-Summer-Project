@@ -169,19 +169,14 @@ class MapManagement extends Component{
 				</div>
                 <br/>
                 <div width="900">
-                <table className="ant-table" style={{margin:'auto'}}>
+                <table className="ant-table ant-table-bordered" style={{margin:'auto'}}>
                 <thead className="ant-table-thead">
                     <tr>
-                        <th>Mapid
-                        </th>  
-                        <th>Map
-                        </th>
-                        <th>areaid
-                        </th>
-                        <th>Edit
-                        </th>
-                        <th>Delete
-                        </th>
+                        <th>Mapid</th>
+                        <th>Areaid</th>  
+                        <th>Map</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody className="ant-table-tbody">
