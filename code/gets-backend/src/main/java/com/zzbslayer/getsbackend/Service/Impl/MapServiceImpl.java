@@ -6,6 +6,8 @@ import com.zzbslayer.getsbackend.Service.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MapServiceImpl implements MapService{
     @Autowired
@@ -16,10 +18,20 @@ public class MapServiceImpl implements MapService{
     }
 
     public MapEntity save(MapEntity mapEntity) {
-        return mapRepository.save(mapEntity);
+        if (mapEntity.getMapid()==0)
+            return mapRepository.save(mapEntity);
+        MapEntity mapEntity1 = mapRepository.findByMapid(mapEntity.getMapid());
+        mapEntity1.setAreaid(mapEntity.getAreaid());
+        mapEntity1.setMap(mapEntity.getMap());
+        return mapRepository.save(mapEntity1);
+
     }
 
-    public void deleteByAreaid(Integer areaid) {
-        mapRepository.deleteByAreaid(areaid);
+    public void deleteByMapid(Integer mapid) {
+        mapRepository.deleteByMapid(mapid);
+    }
+
+    public List<MapEntity> findAll(){
+        return mapRepository.findAll();
     }
 }

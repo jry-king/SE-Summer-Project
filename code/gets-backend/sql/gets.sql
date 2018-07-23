@@ -21,7 +21,8 @@ create table history
 
 create table map
 (
-    areaid integer NOT NULL UNIQUE AUTO_INCREMENT,
-    map text,
+    mapid integer NOT NULL UNIQUE AUTO_INCREMENT,
+    map varchar(500) NOT NULL,
+    areaid integer NOT NULL UNIQUE,
     primary key (areaid)
 )
