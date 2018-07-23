@@ -261,7 +261,7 @@ class CameraTable extends Component{
         .then(
             (result) => {
                 if (result.status)
-                    message.error(result.msg)
+                    message.error(result.message)
                 else
                     this.setState({
                         cameras: result,
@@ -269,13 +269,14 @@ class CameraTable extends Component{
                     })
             },
             (error) => {
-                message.error(error)
+                message.error("Network Error")
+                console.log(error)
             }
         )
     }
 
-    deleteCamera = (key) => {
-        fetch(dataApi + "camera/delete?key=" + key,{
+    deleteCamera = (cameraid) => {
+        fetch(dataApi + "camera/delete?cameraid=" + cameraid,{
             method:'get',
             credentials: 'include'
         })
@@ -283,14 +284,22 @@ class CameraTable extends Component{
         .then(
             (result) => {
                 if (result.status)
-                    message.error(result.msg)
+                    message.error(result.message)
                 else{
+                    let cameras = this.state.cameras
+                    for (let i in cameras){
+                        if (cameras[i].cameraid===cameraid){
+                            cameras.splice(i,1)
+                            break
+                        }
+                    }
                     message.success("Delete Success")
-                    this.setState({cameras:result})
+                    this.setState({cameras: cameras})
                 }
             },
             (error) => {
-                message.error("Delete Book Error:\n"+error)
+                message.error("Network Error")
+                console.log(error)
             }
         )
     }
@@ -301,7 +310,6 @@ class CameraTable extends Component{
         const columns = this.columns;
         return(
 		<div>
-		
 			<div>
                 <Button className = "add-btn" type="primary" onClick={ this.addCamera }>Add a new Camera</Button>
                 <Table className = "table" bordered rowSelection={rowSelection} dataSource={cameras} columns={columns} onChange={this.onChange} onDelete={this.deleteCamera} />
@@ -324,7 +332,7 @@ class CameraTable extends Component{
                     {   
                         cameras?cameras.map((camera) => {
                             return (
-                                <CameraRow key={camera.key} camera={camera}/>
+                                <CameraRow key={camera.cameraid} camera={camera}/>
                             )
                         }):null
                     }
