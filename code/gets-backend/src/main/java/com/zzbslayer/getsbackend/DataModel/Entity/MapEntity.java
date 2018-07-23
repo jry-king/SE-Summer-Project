@@ -6,8 +6,8 @@ import javax.persistence.*;
 @Table(name = "map", schema = "gets", catalog = "")
 public class MapEntity {
     private int mapid;
-    private String map;
     private int areaid;
+    private String map;
 
     @Basic
     @Column(name = "mapid", nullable = false)
@@ -19,16 +19,6 @@ public class MapEntity {
         this.mapid = mapid;
     }
 
-    @Basic
-    @Column(name = "map", nullable = false, length = 500)
-    public String getMap() {
-        return map;
-    }
-
-    public void setMap(String map) {
-        this.map = map;
-    }
-
     @Id
     @Column(name = "areaid", nullable = false)
     public int getAreaid() {
@@ -37,6 +27,16 @@ public class MapEntity {
 
     public void setAreaid(int areaid) {
         this.areaid = areaid;
+    }
+
+    @Basic
+    @Column(name = "map", nullable = false, length = 500)
+    public String getMap() {
+        return map;
+    }
+
+    public void setMap(String map) {
+        this.map = map;
     }
 
     @Override
@@ -56,8 +56,8 @@ public class MapEntity {
     @Override
     public int hashCode() {
         int result = mapid;
-        result = 31 * result + (map != null ? map.hashCode() : 0);
         result = 31 * result + areaid;
+        result = 31 * result + (map != null ? map.hashCode() : 0);
         return result;
     }
 }

@@ -9,6 +9,8 @@ public interface MapService {
 
     MapEntity save(MapEntity mapEntity);
 
+    void deleteByAreaid(Integer areaid);
+
     void deleteByMapid(Integer mapid);
 
     List<MapEntity> findAll();

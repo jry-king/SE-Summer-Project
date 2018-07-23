@@ -21,14 +21,19 @@ public class MapServiceImpl implements MapService{
         if (mapEntity.getMapid()==0)
             return mapRepository.save(mapEntity);
         MapEntity mapEntity1 = mapRepository.findByMapid(mapEntity.getMapid());
+        if (mapEntity1==null)
+            return mapRepository.save(mapEntity);
         mapEntity1.setAreaid(mapEntity.getAreaid());
         mapEntity1.setMap(mapEntity.getMap());
         return mapRepository.save(mapEntity1);
-
     }
 
-    public void deleteByMapid(Integer mapid) {
+    public void deleteByMapid(Integer mapid){
         mapRepository.deleteByMapid(mapid);
+    }
+
+    public void deleteByAreaid(Integer areaid) {
+        mapRepository.deleteByAreaid(areaid);
     }
 
     public List<MapEntity> findAll(){
