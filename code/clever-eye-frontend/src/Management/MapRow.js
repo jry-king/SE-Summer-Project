@@ -47,7 +47,6 @@ class MapRow extends Component {
                 "map":encodeURIComponent(this.state.map),
                 "areaid":encodeURIComponent(this.state.areaid)
             }
-            console.log(msg)
 
             fetch(dataApi+"map/save", {
                 method: 'post',
@@ -88,7 +87,7 @@ class MapRow extends Component {
             return(
                 <tr>
                     <td>{mapid}</td>
-                    <td><img src={map} alt={"map"+areaid} width={50} height={50}/></td>
+                    <td><img src={map} alt={"map"+areaid} width={100} height={100}/></td>
                     <td>{areaid}</td>
                     <td><Button color="primary" onClick={this.handleEdit}>Edit</Button></td>
                     <td><Button type="danger" onClick={this.handleDelete}>Delete</Button></td>
