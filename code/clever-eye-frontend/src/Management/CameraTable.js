@@ -130,35 +130,6 @@ class CameraTable extends Component{
 
     }
 	
-	
-    onInputChange = (e) => {
-        this.setState({ searchText: e.target.value });
-    }
-
-    onSearch = () => {
-        const { searchText } = this.state;
-        const reg = new RegExp(searchText, 'gi');
-        this.setState({
-            filterDropdownVisible: false,
-            filtered: !!searchText,
-            dataSource: this.state.dataSource.map((record) => {
-                const match = record.bookname.match(reg);
-                if (!match) {
-                    return null;
-                }
-                return {
-                    ...record,
-                    bookname: (
-                        <span>
-              {record.bookname.split(reg).map((text, i) => (
-                  i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
-              ))}
-            </span>
-                    ),
-                };
-            }).filter(record => !!record),
-        });
-    }
 
     renderColumns(text, record, column) {
         return (
@@ -215,6 +186,8 @@ class CameraTable extends Component{
                 "y":encodeURIComponent(this.state.y),
                 "areaid":+encodeURIComponent(this.state.areaid)
             }
+			
+			console.log(msg);
 
             fetch(dataApi+"camera/save", {
                 method: 'post',
@@ -223,24 +196,21 @@ class CameraTable extends Component{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(msg)
+                body: msg
 
             })
             .then(res => res.json())
             .then(
                 (result)=>{
-                    if (result.status){
-                        message.error("Edit Error")
-                        console.log(result.message)
-                    }
+                    if (result.status)
+                        message.error("Edit Error:\n"+result.msg)
                     else {
                         message.success("Edit Success")
                         this.setState({edit:false})
                     }
                 },
                 (error) => {
-                    message.error("Network Error")
-                    console.log(error)
+                    message.error("Edit Error:\n"+error)
                 }
             )
         }
@@ -264,7 +234,7 @@ class CameraTable extends Component{
         .then(
             (result) => {
                 if (result.status)
-                    message.error(result.message)
+                    message.error(result.msg)
                 else
                     this.setState({
                         cameras: result,
@@ -272,14 +242,13 @@ class CameraTable extends Component{
                     })
             },
             (error) => {
-                message.error("Network Error")
-                console.log(error)
+                message.error(error)
             }
         )
     }
 
-    deleteCamera = (cameraid) => {
-        fetch(dataApi + "camera/delete?cameraid=" + cameraid,{
+    deleteCamera = (key) => {
+        fetch(dataApi + "camera/delete?key=" + key,{
             method:'get',
             credentials: 'include'
         })
@@ -287,22 +256,14 @@ class CameraTable extends Component{
         .then(
             (result) => {
                 if (result.status)
-                    message.error(result.message)
+                    message.error(result.msg)
                 else{
-                    let cameras = this.state.cameras
-                    for (let i in cameras){
-                        if (cameras[i].cameraid===cameraid){
-                            cameras.splice(i,1)
-                            break
-                        }
-                    }
                     message.success("Delete Success")
-                    this.setState({cameras: cameras})
+                    this.setState({cameras:result})
                 }
             },
             (error) => {
-                message.error("Network Error")
-                console.log(error)
+                message.error("Delete Error:\n"+error)
             }
         )
     }
@@ -313,6 +274,7 @@ class CameraTable extends Component{
         const columns = this.columns;
         return(
 		<div>
+		
 			<div>
                 <Button className = "add-btn" type="primary" onClick={ this.addCamera }>Add a new Camera</Button>
                 <Table className = "table" bordered rowSelection={rowSelection} dataSource={cameras} columns={columns} onChange={this.onChange} onDelete={this.deleteCamera} />
@@ -335,7 +297,7 @@ class CameraTable extends Component{
                     {   
                         cameras?cameras.map((camera) => {
                             return (
-                                <CameraRow key={camera.cameraid} camera={camera}/>
+                                <CameraRow key={camera.key} camera={camera}/>
                             )
                         }):null
                     }

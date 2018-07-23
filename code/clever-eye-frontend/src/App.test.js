@@ -51,7 +51,7 @@ describe('Test <VideoCrop/>', () => {
         const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
         expect(wrapper.find({src: src, type: type})).toHaveLength(1)
     })
-
+	
     test('<VideoCrop/> should only display one button at first',() => {
         let src = videoServer + 'test.webm'
         let type = "video/webm"
@@ -62,7 +62,7 @@ describe('Test <VideoCrop/>', () => {
 describe('Test Api', () => {
     test('Test /api/camera?areaid=1', () => {
         return fetch(dataApi + 'camera?areaid=1',{
-                methdo: 'get'
+                method: 'get'
             })
             .then(res => res.json())
             .then(
@@ -74,7 +74,7 @@ describe('Test Api', () => {
 
     test('Test /api/history?areaid=1', () => {
         return fetch(dataApi + 'history?areaid=1',{
-                methdo: 'get'
+                method: 'get'
             })
             .then(res => res.json())
             .then(
@@ -86,7 +86,7 @@ describe('Test Api', () => {
 
     test('Test /api/map?areaid=1', () => {
         return fetch(dataApi + 'map?areaid=1',{
-                methdo: 'get'
+                method: 'get'
             })
             .then(res => res.json())
             .then(
@@ -127,7 +127,7 @@ describe('Test Api', () => {
 
     test('Test /camera?areaid=' + testid + '\n\t- fetch the camera data ( cameraid = '+testid+', areaid = '+testid+')', () => {
         return fetch(dataApi + 'camera?areaid=' + testid,{
-                methdo: 'get'
+                method: 'get'
             })
             .then(res => res.json())
             .then(
@@ -154,7 +154,7 @@ describe('Test Api', () => {
     let path = 'camera?areaid='+testid
     test('Test /api/camera?areaid=' + testid + '\n\t- fetch the camera data ( cameraid = '+testid+', areaid = '+testid+')', () => {
         return fetch(dataApi + 'camera?areaid=' + testid,{
-                methdo: 'get'
+                method: 'get'
             })
             .then(res => res.json())
             .then(
@@ -163,6 +163,8 @@ describe('Test Api', () => {
                     expect(result).toEqual([])
             });
     });
+	
+	
 })
 
 
