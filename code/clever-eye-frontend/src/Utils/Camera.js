@@ -30,16 +30,6 @@ class Camera extends Component{
             transform: `translate(${minusX}, ${minusY})`,
         }
 
-        const circle = {
-            top: x,
-            left: y,
-            transform: `translate(${minusX}, ${minusY})`,
-            width:`100px`,
-            height:`100px`,
-            border:`5px solid orange`,
-            borderRadius:`50px`
-        }
-
         const cameraid = camera.cameraid
             
         return(
