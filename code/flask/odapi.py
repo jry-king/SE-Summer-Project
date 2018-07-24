@@ -52,7 +52,10 @@ def hello():
         while True:
             raw_image = pipe.stdout.read(1280*720*3)
             image =  np.fromstring(raw_image, dtype='uint8')
-            result = odapi_server.detect(image)
+            image = np.array(image).reshape(1280,720,3)
+            print(len(image))
+            print(len(image[0]))
+            #result = odapi_server.detect(image)
             break
 
     
@@ -65,7 +68,9 @@ def hello():
     #result = odapi_server.run_inference_for_single_image(file)
     return json.dumps(result, cls=JsonEncoder)
 
+@app.route("/stream", methods=['GET'])
 def video():
+    index = 0
     while True:
         print("test----")
         pipe = sp.Popen([ "ffmpeg", "-i", VIDEO_URL,
@@ -75,16 +80,17 @@ def video():
                 "-pix_fmt", "bgr24",
                 "-vcodec", "rawvideo", "-"],
                 stdin = sp.PIPE, stdout = sp.PIPE)
+        index = index +1
+        
+
         while True:
             raw_image = pipe.stdout.read(1280*720*3)
             image =  np.fromstring(raw_image, dtype='uint8')
-            result = odapi_server.detect(image)
+            image = np.array(image).reshape(720,1280,3)
+            result = odapi_server.detect(image,'gallery.csv',index)
+            print(result)
             break
-
-    
-    #file = request.files['file']
-    #file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-    #file.save(file_path)
+        
     
     #file = Image.open(file)
     #file = np.array(file)
