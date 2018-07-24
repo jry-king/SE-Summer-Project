@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import CameraRow from './CameraRow'
 import { dataApi } from '../Global'
 import { message } from 'antd'
-import { Table, Input, Button, Popconfirm } from 'antd';
+import { Icon,Form, Table, Input, Button, Popconfirm } from 'antd';
 
 const Search = Input.Search;
 
@@ -15,6 +15,13 @@ const EditableCell = ({ editable, value, onChange }) => (
     </div>
 );
 
+const FormItem = Form.Item;
+
+function hasErrors(fieldsError) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
+
+
 const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
@@ -26,6 +33,10 @@ const rowSelection = {
 };
 
 class CameraTable extends Component{
+	componentDidMount() {
+			// To disabled submit button at the beginning.
+		this.props.form.validateFields();
+	}
     constructor(props){
         super(props)
         this.state = {
@@ -51,19 +62,19 @@ class CameraTable extends Component{
         },{
             title: 'Param1',
             dataIndex: 'param1',
-            width: '15%',
+            width: '10%',
             sorter: (a, b) => b.param1.length - a.param1.length,
             render: (text, record) => this.renderColumns(text, record, 'param1'),
         },{
             title: 'Param2',
             dataIndex: 'param2',
-            width: '15%',
+            width: '10%',
             sorter: (a, b) => b.param2.length - a.param2.length,
             render: (text, record) => this.renderColumns(text, record, 'param2'),
         },{
             title: 'Param3',
             dataIndex: 'param3',
-            width: '15%',
+            width: '10%',
             sorter: (a, b) => b.param3.length - a.param3.length,
             render: (text, record) => this.renderColumns(text, record, 'param3'),
         },{
@@ -131,6 +142,35 @@ class CameraTable extends Component{
         this.getCamera()
     }
 	
+	
+    onInputChange = (e) => {
+        this.setState({ searchText: e.target.value });
+    }
+
+    onSearch = () => {
+        const { searchText } = this.state;
+        const reg = new RegExp(searchText, 'gi');
+        this.setState({
+            filterDropdownVisible: false,
+            filtered: !!searchText,
+            dataSource: this.state.dataSource.map((record) => {
+                const match = record.bookname.match(reg);
+                if (!match) {
+                    return null;
+                }
+                return {
+                    ...record,
+                    bookname: (
+                        <span>
+              {record.bookname.split(reg).map((text, i) => (
+                  i > 0 ? [<span className="highlight">{match[0]}</span>, text] : text
+              ))}
+            </span>
+                    ),
+                };
+            }).filter(record => !!record),
+        });
+    }
 
     renderColumns(text, record, column) {
         return (
@@ -171,7 +211,15 @@ class CameraTable extends Component{
 
     save(key) {
         const newData = [...this.state.data];
+		
+		console.log(key)
+		console.log(newData)
+		
         const target = newData.filter(item => key === item.key)[0];
+		
+		console.log(target)
+
+
         if (target) {
             delete target.editable;
             this.setState({ data: newData });
@@ -179,16 +227,17 @@ class CameraTable extends Component{
         }
 
             let msg = {
-                "cameraid":encodeURIComponent(this.state.cameraid),
-                "param1":encodeURIComponent(this.state.param1),
-                "param2":encodeURIComponent(this.state.param2),
-                "param3":+encodeURIComponent(this.state.param3),
-                "x":+encodeURIComponent(this.state.x),
-                "y":encodeURIComponent(this.state.y),
-                "areaid":+encodeURIComponent(this.state.areaid)
+                "cameraid":target.cameraid,
+                "param1":target.param1,
+                "param2":target.param2,
+                "param3":target.param3,
+                "x":target.x,
+                "y":target.y,
+                "areaid":target.areaid
             }
 			
-			console.log(msg);
+			console.log(msg)
+
 
             fetch(dataApi+"camera/save", {
                 method: 'post',
@@ -197,21 +246,24 @@ class CameraTable extends Component{
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: msg
+                body: JSON.stringify(msg)
 
             })
             .then(res => res.json())
             .then(
                 (result)=>{
-                    if (result.status)
-                        message.error("Edit Error:\n"+result.msg)
+                    if (result.status){
+                        message.error("Edit Error")
+                        console.log(result.message)
+                    }
                     else {
                         message.success("Edit Success")
                         this.setState({edit:false})
                     }
                 },
                 (error) => {
-                    message.error("Edit Error:\n"+error)
+                    message.error("Network Error")
+                    console.log(error)
                 }
             )
         }
@@ -235,7 +287,7 @@ class CameraTable extends Component{
         .then(
             (result) => {
                 if (result.status)
-                    message.error(result.msg)
+                    message.error(result.message)
                 else
                     this.setState({
                         cameras: result,
@@ -243,70 +295,190 @@ class CameraTable extends Component{
                     })
             },
             (error) => {
-                message.error(error)
+                message.error("Network Error")
+                console.log(error)
             }
         )
     }
 
-    deleteCamera = (key) => {
-        fetch(dataApi + "camera/delete?key=" + key,{
-            method:'get',
+    deleteCamera = (cameraid) => {
+        fetch(dataApi + "camera/delete?cameraid=" + cameraid,{
+            method:'delete',
             credentials: 'include'
         })
-        .then(res => res.json())
         .then(
             (result) => {
-                if (result.status)
-                    message.error(result.msg)
+                if (result.ok===false)
+                    message.error(result.message)
                 else{
+                    let cameras = this.state.cameras
+                    for (let i in cameras){
+                        if (cameras[i].cameraid===cameraid){
+                            cameras.splice(i,1)
+                            break
+                        }
+                    }
                     message.success("Delete Success")
-                    this.setState({cameras:result})
+                    this.setState({cameras: cameras})
                 }
             },
             (error) => {
-                message.error("Delete Error:\n"+error)
+                message.error("Network Error")
+                console.log(error)
             }
         )
-    }
+	}
 
+		  handleSubmit = (e) => {
+			e.preventDefault();
+			this.props.form.validateFields((err, values) => {
+			  if (!err) {
+				console.log('Received values of form: ', values);
+					let msg = values;
+					msg['cameraid'] = 0;
+					console.log('msg: ',msg);
+				
+				fetch(dataApi+"camera/save", {
+					method: 'post',
+					credentials: 'include',
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(msg)
+				})
+				.then(res => res.json())
+				.then(
+					(result)=>{
+						if (result.status){
+							message.error("Edit Error")
+							console.log(result.message)
+						}
+						else {
+							message.success("Edit Success")
+							this.setState({edit:false})
+						}
+					},
+					(error) => {
+						message.error("Network Error")
+						console.log(error)
+					}
+				)
+			  }
+			});
+		  }
 
     render(){
         const cameras = this.state.cameras;
+		for (let id in cameras){
+			cameras[id]["key"]=cameras[id]["cameraid"];
+		}
         const columns = this.columns;
-        return(
+		console.log(this.props.form)
+		const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+		// Only show error after a field is touched.
+		const Param1Error = isFieldTouched('Param1') && getFieldError('Param1');
+		const Param2Error = isFieldTouched('Param2') && getFieldError('Param2');
+		const Param3Error = isFieldTouched('Param3') && getFieldError('Param3');
+		const AreaError = isFieldTouched('Area') && getFieldError('Area');
+		const PositionXError = isFieldTouched('PositionX') && getFieldError('PositionX');
+		const PositionYError = isFieldTouched('PositionY') && getFieldError('PositionY');		
+        
+		return(
 		<div>
-		
+			  <Form layout="inline" onSubmit={this.handleSubmit}>
+			  
+				<FormItem
+				  validateStatus={Param1Error ? 'error' : ''}
+				  help={Param1Error || ''}
+				  style={{ width:'130px' }} 
+				>
+				  {getFieldDecorator('param1', {
+					rules: [{ required: true, message: 'Please input Param1' }],
+				  })(
+					<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Param1" />
+				  )}
+				</FormItem>
+				
+				<FormItem
+				  validateStatus={Param2Error ? 'error' : ''}	
+				  help={Param2Error || ''}
+				  style={{ width:'130px' }} 
+				>
+				  {getFieldDecorator('param2', {
+					rules: [{ required: true, message: 'Please input Param2' }],
+				  })(
+					<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Param2" />
+				  )}
+				</FormItem>
+				
+				<FormItem
+				  validateStatus={Param3Error ? 'error' : ''}
+				  help={Param3Error || ''}
+				  style={{ width:'130px' }}
+				>
+				  {getFieldDecorator('param3', {
+					rules: [{ required: true, message: 'Please input Param3' }],
+				  })(
+					<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Param3" />
+				  )}
+				</FormItem>
+				
+				<FormItem
+				  validateStatus={AreaError ? 'error' : ''}
+				  help={AreaError || ''}
+				  style={{ width:'130px' }}
+				>
+				  {getFieldDecorator('areaid', {
+					rules: [{ required: true, message: 'Please input Area!' }],
+				  })(
+					<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="Area" placeholder="Area" />
+				  )}
+				</FormItem>
+				
+				<FormItem
+				  validateStatus={PositionXError ? 'error' : ''}
+				  help={PositionXError || ''}
+				  style={{ width:'130px' }}
+				>
+				  {getFieldDecorator('x', {
+					rules: [{ required: true, message: 'Please input PositionX!' }],
+				  })(
+					<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="PositionX" placeholder="PositionX" />
+				  )}
+				</FormItem>
+				
+				<FormItem
+				  validateStatus={PositionYError ? 'error' : ''}
+				  help={PositionYError || ''}
+				  style={{ width:'130px' }}
+				>
+				  {getFieldDecorator('y', {
+					rules: [{ required: true, message: 'Please input PositionY!' }],
+				  })(
+					<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="PositionY" placeholder="PositionY" />
+				  )}
+				</FormItem>
+				
+				<FormItem>
+				  <Button
+					type="primary"
+					htmlType="submit"
+					disabled={hasErrors(getFieldsError())}
+				  >
+					Add
+				  </Button>
+				</FormItem>
+			  </Form>
 			<div>
-                <Button className = "add-btn" type="primary" onClick={ this.addCamera }>Add a new Camera</Button>
                 <Table className = "table" bordered rowSelection={rowSelection} dataSource={cameras} columns={columns} onChange={this.onChange} onDelete={this.deleteCamera} />
 			</div>
-			
-            <table className='managementTable'>
-                <thead>
-                    <tr>
-                    <th>Cameraid</th>
-                    <th>Param1</th>
-                    <th>Param2</th>
-                    <th>Param3</th>
-                    <th>Area</th>
-                    <th>Position X</th>
-                    <th>Position Y</th>
-                    <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {   
-                        cameras?cameras.map((camera) => {
-                            return (
-                                <CameraRow key={camera.key} camera={camera}/>
-                            )
-                        }):null
-                    }
-                </tbody>
-            </table>
 
 		</div>
         )
     }
 }
-export default CameraTable
+
+const WrappedCameraTable = Form.create()(CameraTable);
+
+export default WrappedCameraTable
