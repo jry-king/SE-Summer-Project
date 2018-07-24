@@ -1,12 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { shallow, render } from 'enzyme';
+import { shallow, mount, render } from 'enzyme';
 
 import Map from './Utils/Map'
 import Camera from './Utils/Camera'
 import VideoCrop from './Utils/VideoCrop'
-import { dataApi, videoServer } from './Global'
+import Header from './Utils/Header'
+import MapManagement from './Management/MapManagement'
+import MapRow from './Management/MapRow'
+import { dataApi, videoServer, hlsServer } from './Global'
+import LiveVideo from './LiveVideo/LiveVideo'
+import HistoryVideo from './HistoryVideo/HistoryVideo'
 
 describe('Test <App/>', () => {
     it('renders without crashing', () => {
@@ -56,9 +61,396 @@ describe('Test <VideoCrop/>', () => {
         let src = videoServer + 'test.webm'
         let type = "video/webm"
         const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
+        expect(wrapper.find({type:'primary'})).toHaveLength(1)
     })
 })
 
+describe('Test <Header/>', () => {
+    test('<Header/> should render exactly as expected', () => {
+        let test = 'test'
+        const wrapper = shallow(<Header title={test} />)
+        expect(wrapper.equals(
+            <div>
+            <h2 className = "title">GETS | 慧眼示踪搜寻系统</h2>
+            <h3 className = "subtitle">God Eye Tracking System </h3>
+            <h1 className="App-title">{test}</h1>
+            </div>
+        )).toBe(true)
+    })
+})
+
+function flushPromises() {
+    return new Promise(resolve => setImmediate(resolve));
+}
+
+describe('Test <MapManagement/>', () => {
+    test('After mounted, fetch should be called only once', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "mapid": 7,
+                "areaid": 0,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            },
+            {
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }
+        ]))
+        const wrapper = mount(<MapManagement/>)
+        return flushPromises().then(() => {
+            expect(wrapper.state().maps).toHaveLength(2)
+            expect(fetch.mock.calls).toHaveLength(1);
+        });
+    })
+    test('<MapManagement/> should render correct number of map', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "mapid": 7,
+                "areaid": 0,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            },
+            {
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }
+        ]))
+        const wrapper = mount(<MapManagement/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            expect(wrapper.state().maps.length).toEqual(wrapper.find(MapRow).length)
+        });
+    })
+})
+
+describe('Test <LiveVideo/>', () => {
+    test('After mounted, fetch should be called twice', () => {
+        fetch.resetMocks()
+        fetch
+            .once(JSON.stringify({
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }))
+            .once(JSON.stringify([
+                {
+                    "cameraid": 1,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "20%",
+                    "y": "10%",
+                    "areaid": 1
+                },
+                {
+                    "cameraid": 2,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "30%",
+                    "y": "40%",
+                    "areaid": 1
+                }
+            ]))
+        const match = { params: { camera: null } }
+        const wrapper = mount(<LiveVideo match={match}/>)
+        return flushPromises().then(() => {
+            expect(wrapper.state().cameras).toHaveLength(2)
+            expect(fetch.mock.calls).toHaveLength(2);
+        });
+    })
+    test('<LiveVideo/> should not render <VideoCrop/> when props.match.params.camera is null', () => {
+        fetch
+            .once(JSON.stringify({
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }))
+            .once(JSON.stringify([
+                {
+                    "cameraid": 1,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "20%",
+                    "y": "10%",
+                    "areaid": 1
+                },
+                {
+                    "cameraid": 2,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "30%",
+                    "y": "40%",
+                    "areaid": 1
+                }
+            ]))
+        const match = { params: { camera: null } }
+        const wrapper = shallow(<LiveVideo match={match}/>)
+        expect(wrapper.find(VideoCrop)).toHaveLength(0)
+    })
+    test('<LiveVideo/> should render <VideoCrop/> when props.match.params.camera is not null', () => {
+        fetch
+            .once(JSON.stringify({
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }))
+            .once(JSON.stringify([
+                {
+                    "cameraid": 1,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "20%",
+                    "y": "10%",
+                    "areaid": 1
+                },
+                {
+                    "cameraid": 2,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "30%",
+                    "y": "40%",
+                    "areaid": 1
+                }
+            ]))
+        const match = { params: { camera: 'camera1' } }
+        const wrapper = shallow(<LiveVideo match={match}/>)
+        expect(wrapper.find(VideoCrop)).toHaveLength(1)
+    })
+    test('<LiveVideo/> should pass correct video source to the <VideoCrop/>', () => {
+        fetch
+        .once(JSON.stringify({
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }))
+        .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "20%",
+                "y": "10%",
+                "areaid": 1
+            },
+            {
+                "cameraid": 2,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "30%",
+                "y": "40%",
+                "areaid": 1
+            }
+        ])) 
+        const match = { params: { camera: 'camera2' } }
+        const wrapper = shallow(<LiveVideo match={match}/>)
+        expect(wrapper.find({videoUrl: hlsServer + 'camera2.m3u8'}))
+    })
+})
+
+describe('Test <HistoryVideo/>', () => {
+    test('After mounted, fetch should be called twice', () => {
+        fetch.resetMocks()
+        fetch
+            .once(JSON.stringify({
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }))
+            .once(JSON.stringify([
+                {
+                    "cameraid": 1,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "20%",
+                    "y": "10%",
+                    "areaid": 1
+                },
+                {
+                    "cameraid": 2,
+                    "param1": "param1",
+                    "param2": "param2",
+                    "param3": "param3",
+                    "x": "30%",
+                    "y": "40%",
+                    "areaid": 1
+                }
+            ]))
+        const match = { params: { camera: null } }
+        const wrapper = mount(<LiveVideo match={match}/>)
+        return flushPromises().then(() => {
+            expect(wrapper.state().cameras).toHaveLength(2)
+            expect(fetch.mock.calls).toHaveLength(2);
+        });
+    })
+    test('<HistoryVideo/> should not render <VideoCrop/> when props.match.params.file is null',() => {
+        fetch
+        .once(JSON.stringify({
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }))
+        .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "20%",
+                "y": "10%",
+                "areaid": 1
+            },
+            {
+                "cameraid": 2,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "30%",
+                "y": "40%",
+                "areaid": 1
+            }
+        ]))
+        .once(JSON.stringify([
+            {
+                "historyid": 1,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test"
+            },
+            {
+                "historyid": 2,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test2"
+            },
+            {
+                "historyid": 3,
+                "cameraid": 2,
+                "areaid": 1,
+                "filename": "test3"
+            }
+        ]))
+        const match = { params: { file: null } }
+        const wrapper = shallow(<HistoryVideo match={match}/>)
+        expect(wrapper.find(VideoCrop)).toHaveLength(0)
+    })
+    test('<HistoryVideo/> should render <VideoCrop/> when props.match.params.file is not null', () => {
+        fetch
+        .once(JSON.stringify({
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }))
+        .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "20%",
+                "y": "10%",
+                "areaid": 1
+            },
+            {
+                "cameraid": 2,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "30%",
+                "y": "40%",
+                "areaid": 1
+            }
+        ]))
+        .once(JSON.stringify([
+            {
+                "historyid": 1,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test"
+            },
+            {
+                "historyid": 2,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test2"
+            },
+            {
+                "historyid": 3,
+                "cameraid": 2,
+                "areaid": 1,
+                "filename": "test3"
+            }
+        ]))
+        const test = 'test'
+        const match = { params: { file: test } }
+        const wrapper = shallow(<HistoryVideo match={match}/>)
+        expect(wrapper.find(VideoCrop)).toHaveLength(1)
+    })
+    test('<HistoryVideo/> should pass correct video source to the <VideoCrop/>', () => {
+        fetch
+        .once(JSON.stringify({
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }))
+        .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "20%",
+                "y": "10%",
+                "areaid": 1
+            },
+            {
+                "cameraid": 2,
+                "param1": "param1",
+                "param2": "param2",
+                "param3": "param3",
+                "x": "30%",
+                "y": "40%",
+                "areaid": 1
+            }
+        ]))
+        .once(JSON.stringify([
+            {
+                "historyid": 1,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test"
+            },
+            {
+                "historyid": 2,
+                "cameraid": 1,
+                "areaid": 1,
+                "filename": "test2"
+            },
+            {
+                "historyid": 3,
+                "cameraid": 2,
+                "areaid": 1,
+                "filename": "test3"
+            }
+        ]))
+        const test = 'test'
+        const match = { params: { file: test } }
+        const wrapper = shallow(<LiveVideo match={match}/>)
+        expect(wrapper.find({videoUrl: videoServer + test + '.webm'}))
+    })
+})
+
+/*
 describe('Test Api', () => {
     test('Test /api/camera?areaid=1', () => {
         return fetch(dataApi + 'camera?areaid=1',{
@@ -125,7 +517,7 @@ describe('Test Api', () => {
             });
     });
 
-    test('Test /camera?areaid=' + testid + '\n\t- fetch the camera data ( cameraid = '+testid+', areaid = '+testid+')', () => {
+    test('Test /api/camera?areaid=' + testid + '\n\t- fetch the camera data ( cameraid = '+testid+', areaid = '+testid+')', () => {
         return fetch(dataApi + 'camera?areaid=' + testid,{
                 method: 'get'
             })
@@ -166,8 +558,4 @@ describe('Test Api', () => {
 	
 	
 })
-
-
-
-
-
+*/

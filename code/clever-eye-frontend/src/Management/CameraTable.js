@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import CameraRow from './CameraRow'
 import { dataApi } from '../Global'
 import { message } from 'antd'
-import { Table, Input, Button, Popconfirm ,Icon } from 'antd';
+import { Table, Input, Button, Popconfirm } from 'antd';
 
 const Search = Input.Search;
 
@@ -125,9 +125,10 @@ class CameraTable extends Component{
         }];
         
 		this.cacheData = this.state.dataSource.map(item => ({ ...item }));
-	
-		this.getCamera()
+    }
 
+    componentDidMount = () => {
+        this.getCamera()
     }
 	
 

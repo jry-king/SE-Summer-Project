@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
 import {Cropper} from 'react-image-cropper'
-import { Button } from 'antd'
+import { Button, Row, Col } from 'antd'
 
 const videoWidth = 800
 const videoHeight = 400
@@ -44,18 +44,22 @@ class VideoCrop extends Component {
                     alt="snap"
                     key="media"
                     data-vjs-player>
+                    <Row>
+                        <Col span={3}/>
+                        <Col span={12}>
+                        <video
+                            key={this.props.videoUrl}
+                            className="video-js vjs-default-skin" controls preload="auto"
+                            ref = "video"
+                            poster={ this.props.poster }
+                            width={videoWidth} height={videoHeight} 
+                            data-setup='{}'>
 
-                    <video
-						key={this.props.videoUrl}
-                        className="video-js vjs-default-skin" controls preload="auto"
-                        ref = "video"
-                        poster={ this.props.poster }
-                        width={videoWidth} height={videoHeight} 
-                        data-setup='{}'>
+                            <source src={ this.props.videoUrl } type={this.props.videoType} />
 
-                        <source src={ this.props.videoUrl } type={this.props.videoType} />
-
-                    </video>
+                        </video>
+                        </Col>
+                    </Row>
                 </div>
 
                 <br/><br/><br/>
