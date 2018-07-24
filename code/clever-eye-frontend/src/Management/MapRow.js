@@ -47,6 +47,7 @@ class MapRow extends Component {
                 "map":encodeURIComponent(this.state.map),
                 "areaid":encodeURIComponent(this.state.areaid)
             }
+            console.log(JSON.stringify(msg))
 
             fetch(dataApi+"map/save", {
                 method: 'post',
