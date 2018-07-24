@@ -2,13 +2,15 @@ import tensorflow as tf
 
 from object_detection.utils import label_map_util
 
-
+from copy import copy
 import numpy as np
 import os
 import time
 import matplotlib.image as mpimg
 from imgaug import augmenters as iaa
-
+from PIL import Image
+import csv
+import cv2
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 PATH_TO_CKPT = '/Users/darlenelee/Documents/vir_env/models/research/object_detection/ssdlite_mobilenet_v2_coco_2018_05_09/frozen_inference_graph.pb'
 
@@ -35,67 +37,6 @@ categories = label_map_util.convert_label_map_to_categories(label_map, max_num_c
                                                             use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
-def run_inference_for_single_image(image):
-  graph = detection_graph
-  with graph.as_default():
-    with tf.Session() as sess:
-      # Get handles to input and output tensors
-      ops = tf.get_default_graph().get_operations()
-      all_tensor_names = {output.name for op in ops for output in op.outputs}
-      tensor_dict = {}
-      for key in [
-          'num_detections', 'detection_boxes', 'detection_scores',
-          'detection_classes', 'detection_masks'
-      ]:
-        tensor_name = key + ':0'
-        if tensor_name in all_tensor_names:
-          tensor_dict[key] = tf.get_default_graph().get_tensor_by_name(
-              tensor_name)
-      if 'detection_masks' in tensor_dict:
-        # The following processing is only for single image
-        detection_boxes = tf.squeeze(tensor_dict['detection_boxes'], [0])
-        detection_masks = tf.squeeze(tensor_dict['detection_masks'], [0])
-        # Reframe is required to translate mask from box coordinates to image coordinates and fit the image size.
-        real_num_detection = tf.cast(tensor_dict['num_detections'][0], tf.int32)
-        detection_boxes = tf.slice(detection_boxes, [0, 0], [real_num_detection, -1])
-        detection_masks = tf.slice(detection_masks, [0, 0, 0], [real_num_detection, -1, -1])
-        #detection_masks_reframed = utils_ops.reframe_box_masks_to_image_masks(
-        #    detection_masks, detection_boxes, image.shape[0], image.shape[1])
-        #detection_masks_reframed = tf.cast(
-        #    tf.greater(detection_masks_reframed, 0.5), tf.uint8)
-        # Follow the convention by adding back the batch dimension
-        #tensor_dict['detection_masks'] = tf.expand_dims(
-        #    detection_masks_reframed, 0)
-      image_tensor = tf.get_default_graph().get_tensor_by_name('image_tensor:0')
-
-      # Run inference
-      output_dict = sess.run(tensor_dict,
-                             feed_dict={image_tensor: np.expand_dims(image, 0)})
-
-      # all outputs are float32 numpy arrays, so convert types as appropriate
-      output_dict['num_detections'] = int(output_dict['num_detections'][0])
-      output_dict['detection_classes'] = output_dict[
-          'detection_classes'][0].astype(np.uint8)
-      output_dict['detection_boxes'] = output_dict['detection_boxes'][0]
-      output_dict['detection_scores'] = output_dict['detection_scores'][0]
-      if 'detection_masks' in output_dict:
-        output_dict['detection_masks'] = output_dict['detection_masks'][0]
-
-    result = []
-    scores = output_dict['detection_scores']
-    boxes = output_dict['detection_boxes']
-    classes = output_dict['detection_classes']
-    for score in scores:
-        if score > 0.5:
-            index = scores[0].tolist().index(score)
-            cls = int(classes[0][index])
-            box = boxes[0][index]
-            print(cls, score)
-            result.append({'cls': cls, 'box': box.tolist(), 'score': score})
-            # sess.reset('')
-    sess.close()
-  return result
-
 
 # 将图片加载到numpy数组中
 def load_image_into_numpy_array(image):
@@ -104,7 +45,10 @@ def load_image_into_numpy_array(image):
         (im_height, im_width, 3)).astype(np.uint8)
 
 
-def detect(image_path):
+def detect(image,csvFile,index):
+    origin=copy(image)
+    csvfile = open(csvFile,'a')
+    writer = csv.writer(csvfile)
     with detection_graph.as_default():
         with tf.Session(graph=detection_graph) as sess:
             # Definite input and output Tensors for detection_graph
@@ -118,11 +62,7 @@ def detect(image_path):
             num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
             start_time = time.time()
-            image = mpimg.imread(image_path)
-
-            print('===Read Spend:', time.time() - start_time)
-            start_time = time.time()
-
+            #image = mpimg.imread(image_path)
 
             # if image.shape[1] > MAX_WIDTH:
             #     aug = iaa.Scale({"width": MAX_WIDTH, "height": "keep-aspect-ratio"})
@@ -142,16 +82,29 @@ def detect(image_path):
 
             print('===Detection Spend:', time.time() - start_time)
             start_time = time.time()
-
+                
             result = []
+            
             for score in scores[0]:
                 if score > 0.5:
-                    index = scores[0].tolist().index(score)
-                    cls = int(classes[0][index])
-                    box = boxes[0][index]
+                    j = scores[0].tolist().index(score)
+                    cls = int(classes[0][j]);
+                    box = boxes[0][j]
+                    p1 = box[1] * 1280
+                    p2 = box[0] * 780
+                    p3 = box[3] * 1280
+                    p4 = box[2] * 780
+                    region=origin[int(p2):int(p4),int(p1):int(p3)]
+                    region = cv2.cvtColor(region, cv2.COLOR_RGB2BGR)
+                    img = Image.fromarray(region)
+                    relativePath = 'gallery/'+str(index)+'-'+str(j)+'.jpg'
+                    resultFileName=os.getcwd()+'/' +relativePath
+                    writer.writerow([index+1,relativePath])
+                    writer.writerow([index+1,relativePath])
+                    img.save(resultFileName)
                     print(cls, score)
                     result.append({'cls': cls, 'box': box.tolist(), 'score': score})
             # sess.reset('')
             sess.close()
-
+    csvfile.close()
     return result
