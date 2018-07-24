@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { dataApi, hlsServer } from '../Global';
-import { Icon, Button, Select, message } from 'antd'
+import { Icon, Button, Select, message, Row, Col } from 'antd'
 import Header from '../Utils/Header'
 import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
@@ -13,13 +13,14 @@ class LiveVideo extends Component {
     constructor(props){
         super(props)
         this.state={
-            cameras: null,
-            videoUrl: null,
-            map:null,
+            chosenCamera: null,
 
             imgSrc: null,
             imageLoaded: false
         }
+    }
+
+    componentDidMount = () => {
         this.getMap()
         this.getCamera()
     }
@@ -29,11 +30,11 @@ class LiveVideo extends Component {
     }
 
     handleClick = () => {
-        window.location.href = "/video/live/" + this.state.videoUrl;
+        window.location.href = "/video/live/" + this.state.chosenCamera;
     }
 
     handleChange = (value) => {
-        this.setState({videoUrl:value})
+        this.setState({chosenCamera:value})
     }
 
     getCamera = () => {
@@ -49,7 +50,6 @@ class LiveVideo extends Component {
                 else
                     this.setState({
                         cameras: result,
-                        videoUrl: result[0].url
                     })
             },
             (error) => {
@@ -86,7 +86,7 @@ class LiveVideo extends Component {
         const camera = this.props.match.params.camera
         const videoUrl = hlsServer + camera + ".m3u8"
         const map = this.state.map
-        console.log(camera)
+        const chosenCamera = this.state.chosenCamera
         return (
             <div style={{ background: '#ECECEC'}}>
                 <header className="App-header">
@@ -99,20 +99,24 @@ class LiveVideo extends Component {
                     (
                         cameras?
                         <div>
-                            <div className="select-container">
-                                <h2>选择摄像头</h2>
-                                <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
-                                {
-                                    cameras.map((camera) => {
-                                        return <Option key={camera.cameraid} id={camera.cameraid} value={"camera"+camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
-                                    })
-                                }
-                                </Select>
-                                <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
-                                <br/><br/><br/>
-                            </div>
-
-                            <Map cameras={cameras} backgroundImage={map} clickCamera={this.clickCamera} chosenCamera={camera}/>
+                            <Row>
+                                <Col span={8}/>
+                                <Col span={3}><h2>选择摄像头:</h2></Col>
+                                <Col span={3}>
+                                    <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
+                                    {
+                                        cameras.map((camera) => {
+                                            return <Option key={camera.cameraid} id={camera.cameraid} value={"camera"+camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
+                                        })
+                                    }
+                                    </Select>
+                                </Col>
+                                <Col span={2}>
+                                    <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
+                                </Col>
+                            </Row>
+                            <br/><br/><br/>
+                            <Map cameras={cameras} backgroundImage={map} clickCamera={this.clickCamera} chosenCamera={chosenCamera}/>
                         </div>
                         :null
                     )

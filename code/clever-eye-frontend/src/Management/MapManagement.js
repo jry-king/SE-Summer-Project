@@ -8,15 +8,16 @@ class MapManagement extends Component{
     constructor(props){
         super(props)
         this.state = {
-            maps:null,
-
             areaid:null,
             map:null
         }
-        this.getMap()
     }
 
-    getMap = () => {
+    componentDidMount = () => {
+        this.getMaps()
+    }
+
+    getMaps = () => {
         fetch(dataApi+"map/all", {
             method: 'get',
             credentials: 'include'
