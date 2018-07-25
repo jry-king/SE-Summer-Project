@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { Button } from 'antd'
 import { shallow, mount, render } from 'enzyme';
 
 import Map from './Utils/Map'
@@ -12,6 +13,7 @@ import MapRow from './Management/MapRow'
 import { dataApi, videoServer, hlsServer } from './Global'
 import LiveVideo from './LiveVideo/LiveVideo'
 import HistoryVideo from './HistoryVideo/HistoryVideo'
+import CameraRow from './Management/CameraRow';
 
 describe('Test <App/>', () => {
     it('renders without crashing', () => {
@@ -76,6 +78,67 @@ describe('Test <Header/>', () => {
             <h1 className="App-title">{test}</h1>
             </div>
         )).toBe(true)
+    })
+})
+
+describe('Test <MapRow/>', () => {
+    test('<MapRow/> should render exactly as expected', () => {
+        const map = {
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }   
+        const wrapper = shallow(<MapRow map={map}/>)
+        const mapid = map.mapid
+        const mapimg = map.map
+        const areaid = map.areaid
+        expect(wrapper.contains(
+            <td>{mapid}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td><img src={mapimg} alt={"map"+areaid} width={100} height={100}/></td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{areaid}</td>
+        )).toBe(true)
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+})
+
+describe('Test <CameraRow/>', () => {
+    test('<CameraRow/> should render exactly as expected', () => {
+        const camera = {
+            "cameraid": 1,
+            "param1": "param1",
+            "param2": "param2",
+            "param3": "param33",
+            "x": "20%",
+            "y": "10%",
+            "areaid": 1
+        }
+        const wrapper = shallow(<CameraRow camera={camera}/>)
+        expect(wrapper.contains(
+            <td>{camera.cameraid}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param1}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param2}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param3}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.x}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.y}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.areaid}</td>
+        )).toBe(true)
+        expect(wrapper.find(Button)).toHaveLength(2)
     })
 })
 
