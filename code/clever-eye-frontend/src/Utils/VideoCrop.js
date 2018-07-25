@@ -85,7 +85,7 @@ class VideoCrop extends Component {
                 </div>
 
                 <br/><br/><br/>
-                <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
+                <Button className="crop-btn" type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
 				
 				<div className='initialImage'>

@@ -26,7 +26,7 @@ class LiveVideo extends Component {
     }
 
     clickCamera = (cameraid) => {
-        window.location.href = "/video/live/camera" + cameraid
+        this.setState({chosenCamera:"camera"+cameraid})
     }
 
     handleClick = () => {
@@ -50,6 +50,7 @@ class LiveVideo extends Component {
                 else
                     this.setState({
                         cameras: result,
+                        chosenCamera: "camera" + result[0].cameraid
                     })
             },
             (error) => {
@@ -75,7 +76,7 @@ class LiveVideo extends Component {
                     })
             },
             (error) => {
-                message.error("error")
+                message.error("Network Error")
                 console.log(error)
             }
         )
@@ -103,10 +104,10 @@ class LiveVideo extends Component {
                                 <Col span={8}/>
                                 <Col span={3}><h2>选择摄像头:</h2></Col>
                                 <Col span={3}>
-                                    <Select defaultValue={camera} style={{ width: 120 }} onChange={this.handleChange}>
+                                    <Select value={chosenCamera} style={{ width: 120 }} onChange={this.handleChange}>
                                     {
                                         cameras.map((camera) => {
-                                            return <Option key={camera.cameraid} id={camera.cameraid} value={"camera"+camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
+                                            return <Option key={camera.cameraid} id={camera.cameraid} value={"camera"+camera.cameraid}>{"camera"+camera.cameraid}</Option>
                                         })
                                     }
                                     </Select>

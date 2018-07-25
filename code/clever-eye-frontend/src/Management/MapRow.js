@@ -39,15 +39,13 @@ class MapRow extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
+    handleSubmit = () => {
         if (this.state.map!=="" &&this.state.areaid!=="" ) {
             let msg = {
                 "mapid":encodeURIComponent(this.state.mapid),
                 "map":encodeURIComponent(this.state.map),
                 "areaid":encodeURIComponent(this.state.areaid)
             }
-
             fetch(dataApi+"map/save", {
                 method: 'post',
                 credentials: 'include',
@@ -86,11 +84,11 @@ class MapRow extends Component {
         if (!edit){ 
             return(
                 <tr>
-                    <td>{mapid}</td>
-                    <td><img src={map} alt={"map"+areaid} width={100} height={100}/></td>
-                    <td>{areaid}</td>
-                    <td><Button color="primary" onClick={this.handleEdit}>Edit</Button></td>
-                    <td><Button type="danger" onClick={this.handleDelete}>Delete</Button></td>
+                    <td name="mapid">{mapid}</td>
+                    <td name="map"><img src={map} alt={"map"+areaid} width={100} height={100}/></td>
+                    <td name="areaid">{areaid}</td>
+                    <td><Button className="edit" type="primary" onClick={this.handleEdit}>Edit</Button></td>
+                    <td><Button className="delete" type="danger" onClick={this.handleDelete}>Delete</Button></td>
                 </tr>
 
             )
@@ -106,10 +104,10 @@ class MapRow extends Component {
                     <Input type="text" defaultValue={areaid} placeholder="Areaid" onChange={this.handleChange} name="areaid"/>
                     </td>
                     <td className = 'action'>
-                        <Button color="primary" onClick = {this.handleSubmit}>Submit</Button>
+                        <Button className="submit" type="primary" onClick = {this.handleSubmit}>Submit</Button>
                     </td>
                     <td className = 'action'>
-                        <Button color="primary" onClick = {this.handleCancel}>Cancel</Button>
+                        <Button className="cancel" type="primary" onClick = {this.handleCancel}>Cancel</Button>
                     </td>
                 </tr>
             )

@@ -26,5 +26,15 @@
     "jest-fetch-mock": "^1.6.5",
     "jest-mock": "^23.2.0",
     "react-app-rewired": "^1.5.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/build",
+      "!src/index.js",
+      "!src/registerServiceWorker.js",
+      "!src/Utils/VideoCrop.js"
+    ]
   }
 }
