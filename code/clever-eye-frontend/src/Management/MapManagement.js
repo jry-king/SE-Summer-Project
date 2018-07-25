@@ -74,13 +74,12 @@ class MapManagement extends Component{
     }
 
     handleSave = () => {
-        if (this.state.map!=="" &&this.state.areaid!=="" ) {
+        if (this.state.map!==null &&this.state.areaid!==null ) {
             let msg = {
                 "mapid":0,
                 "map":this.state.map,
                 "areaid":this.state.areaid
             }
-            console.log(msg)
 
             fetch(dataApi+"map/save", {
                 method: 'post',
