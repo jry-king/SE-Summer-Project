@@ -99,6 +99,8 @@ def detect(image,csvFile,index):
                     relativePath = 'gallery/'+str(index)+'-'+str(j)+'.jpg'
                     resultFileName=os.getcwd()+'/' +relativePath
                     writer.writerow([index+1,relativePath])
+                    writer.writerow([index+1,relativePath])
+
                     img.save(resultFileName)
                     print(cls, score)
                     result.append({'cls': cls, 'box': box.tolist(), 'score': score})
