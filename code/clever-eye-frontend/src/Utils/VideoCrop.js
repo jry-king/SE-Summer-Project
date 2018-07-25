@@ -38,13 +38,26 @@ class VideoCrop extends Component {
 
     uploadImage = () => {
         let msg = "img="+encodeURIComponent(this.state.image)
-        fetch("localhost:5000/string", {
+        fetch("http://localhost:5000/stream", {
             method: 'post',
+            mode:'cors',
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+              },
             body: msg
         })
+        .then(res => res.json())
+        .then(
+            (result)=>{
+                console.log(result)
+               }
+        ),
+        (error) => {
+            console.log(error)
+        }
     }
-
+    
     render(){
         return(
             <div className='monitorImage'>
