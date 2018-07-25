@@ -92,8 +92,9 @@ def detect(image,csvFile,index):
                     cls = int(classes[0][j]);
                     box = boxes[0][j]
                     p1 = box[1] * 1280
-                    p2 = box[0] * 720
+                    p2 = box[0] * 780
                     p3 = box[3] * 1280
+<<<<<<< HEAD
                     p4 = box[2] * 720
                     region = origin[int(p2):int(p4), int(p1):int(p3)]
                     region = cv2.cvtColor(region, cv2.COLOR_RGB2BGR)
@@ -102,6 +103,16 @@ def detect(image,csvFile,index):
                     resultFileName = os.getcwd()+'/' + "gallery/" + relativePath
                     writer.writerow([index+1, relativePath])
                     writer.writerow([index + 1, relativePath])
+=======
+                    p4 = box[2] * 780
+                    region=origin[int(p2):int(p4),int(p1):int(p3)]
+                    region = cv2.cvtColor(region, cv2.COLOR_RGB2BGR)
+                    img = Image.fromarray(region)
+                    relativePath = 'gallery/'+str(index)+'-'+str(j)+'.jpg'
+                    resultFileName=os.getcwd()+'/' +relativePath
+                    writer.writerow([index+1,relativePath])
+                    writer.writerow([index+1,relativePath])
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
                     img.save(resultFileName)
                     print(cls, score)
                     result.append({'cls': cls, 'box': box.tolist(), 'score': score})

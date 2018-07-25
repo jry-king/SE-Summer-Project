@@ -8,9 +8,14 @@ import json
 import re
 import time
 import subprocess as sp
+<<<<<<< HEAD
 from tripletreid.reid import calcreid
 
 UPLOAD_FOLDER = 'F:/SEclasses/SEintro/project/research/object_detection/upload'
+=======
+
+UPLOAD_FOLDER = '/Users/darlenelee/Documents/vir_env/models/research/object_detection/upload'
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
 WEBURL = "http://47.106.8.44:8080/"
 VIDEO_URL = WEBURL + "live/camera2.m3u8"
 app = Flask(__name__)
@@ -43,6 +48,7 @@ class JsonEncoder(json.JSONEncoder):
 def hello():
     while True:
         print("test----")
+<<<<<<< HEAD
         pipe = sp.Popen(["ffmpeg", "-i", VIDEO_URL,
                          "-loglevel", "quiet", # no text output
                          "-an",   # disable audio
@@ -57,23 +63,52 @@ def hello():
             print(len(image))
             print(len(image[0]))
             # result = odapi_server.detect(image)
+=======
+        pipe = sp.Popen([ "ffmpeg", "-i", VIDEO_URL,
+                "-loglevel", "quiet", # no text output
+                "-an",   # disable audio
+                "-f", "image2pipe",
+                "-pix_fmt", "bgr24",
+                "-vcodec", "rawvideo", "-"],
+                stdin = sp.PIPE, stdout = sp.PIPE)
+        while True:
+            raw_image = pipe.stdout.read(1280*720*3)
+            image =  np.fromstring(raw_image, dtype='uint8')
+            image = np.array(image).reshape(1280,720,3)
+            print(len(image))
+            print(len(image[0]))
+            #result = odapi_server.detect(image)
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
             break
 
     # file = request.files['file']
     # file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     # file.save(file_path)
     
+<<<<<<< HEAD
     # file = Image.open(file)
     # file = np.array(file)
     # result = odapi_server.run_inference_for_single_image(file)
     return json.dumps(result, cls=JsonEncoder)
 
 
+=======
+    #file = request.files['file']
+    #file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+    #file.save(file_path)
+    
+    #file = Image.open(file)
+    #file = np.array(file)
+    #result = odapi_server.run_inference_for_single_image(file)
+    return json.dumps(result, cls=JsonEncoder)
+
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
 @app.route("/stream", methods=['GET'])
 def video():
     index = 0
     while True:
         print("test----")
+<<<<<<< HEAD
         pipe = sp.Popen(["ffmpeg", "-i", VIDEO_URL,
                          "-loglevel", "quiet",  # no text output
                          "-an",   # disable audio
@@ -82,6 +117,17 @@ def video():
                          "-vcodec", "rawvideo", "-"],
                         stdin=sp.PIPE, stdout=sp.PIPE)
         index = index + 1
+=======
+        pipe = sp.Popen([ "ffmpeg", "-i", VIDEO_URL,
+                "-loglevel", "quiet", # no text output
+                "-an",   # disable audio
+                "-f", "image2pipe",
+                "-pix_fmt", "bgr24",
+                "-vcodec", "rawvideo", "-"],
+                stdin = sp.PIPE, stdout = sp.PIPE)
+        index = index +1
+        
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
 
         while True:
             raw_image = pipe.stdout.read(1280*720*3)
@@ -92,10 +138,18 @@ def video():
             calcreid("tripletreid\\experiment", "query.csv", "gallery.csv", "query", "gallery",
                      "queryembeddings.h5", "galleryembeddings.h5")
             break
+<<<<<<< HEAD
 
     # file = Image.open(file)
     # file = np.array(file)
     # result = odapi_server.run_inference_for_single_image(file)
+=======
+        
+    
+    #file = Image.open(file)
+    #file = np.array(file)
+    #result = odapi_server.run_inference_for_single_image(file)
+>>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
     return json.dumps(result, cls=JsonEncoder)
 
 
