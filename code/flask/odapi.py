@@ -53,16 +53,8 @@ def receive():
     return json.dumps({'result': 'success'}), 200, {'ContentType': 'application/json'}
 
     
-@app.route("/stream", methods=['GET','POST'])
+@app.route("/stream", methods=['GET'])
 def video():
-    postValues= request.form.get("img")
-    image_data = re.sub('^data:image/.+;base64,', '', postValues)
-    im = Image.open(BytesIO(base64.b64decode(image_data)))
-    im.save('query.jpg')
-    csvfile = open('query.csv','wb')
-    writer = csv.writer(csvfile)
-    writer.writerow([1,'query.jpg'])
-    csvfile.close()
     index = 0
     while True:
         print("test----")
