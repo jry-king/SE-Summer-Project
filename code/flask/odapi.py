@@ -8,14 +8,9 @@ import json
 import re
 import time
 import subprocess as sp
-<<<<<<< HEAD
 from tripletreid.reid import calcreid
 
 UPLOAD_FOLDER = 'F:/SEclasses/SEintro/project/research/object_detection/upload'
-=======
-
-UPLOAD_FOLDER = '/Users/darlenelee/Documents/vir_env/models/research/object_detection/upload'
->>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
 WEBURL = "http://47.106.8.44:8080/"
 VIDEO_URL = WEBURL + "live/camera2.m3u8"
 app = Flask(__name__)
@@ -103,8 +98,16 @@ def hello():
     return json.dumps(result, cls=JsonEncoder)
 
 >>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
-@app.route("/stream", methods=['GET'])
+@app.route("/stream", methods=['GET','POST'])
 def video():
+    postValues= request.form.get("img")
+    image_data = re.sub('^data:image/.+;base64,', '', postValues)
+    im = Image.open(BytesIO(base64.b64decode(image_data)))
+    im.save('query.jpg')
+    csvfile = open('query.csv','w')
+    writer = csv.writer(csvfile)
+    writer.writerow([1,'query.jpg'])
+    csvfile.close()
     index = 0
     while True:
         print("test----")
@@ -138,18 +141,7 @@ def video():
             calcreid("tripletreid\\experiment", "query.csv", "gallery.csv", "query", "gallery",
                      "queryembeddings.h5", "galleryembeddings.h5")
             break
-<<<<<<< HEAD
 
-    # file = Image.open(file)
-    # file = np.array(file)
-    # result = odapi_server.run_inference_for_single_image(file)
-=======
-        
-    
-    #file = Image.open(file)
-    #file = np.array(file)
-    #result = odapi_server.run_inference_for_single_image(file)
->>>>>>> d3dcc2f86068b0a6cfb12b22e94f416b1334c583
     return json.dumps(result, cls=JsonEncoder)
 
 
