@@ -82,6 +82,7 @@ def detect(image,csvFile,index):
 
             print('===Detection Spend:', time.time() - start_time)
             start_time = time.time()
+                
             result = []
             
             for score in scores[0]:
@@ -90,14 +91,15 @@ def detect(image,csvFile,index):
                     cls = int(classes[0][j]);
                     box = boxes[0][j]
                     p1 = box[1] * 1280
-                    p2 = box[0] * 720
+                    p2 = box[0] * 780
                     p3 = box[3] * 1280
-                    p4 = box[2] * 720
+                    p4 = box[2] * 780
                     region=origin[int(p2):int(p4),int(p1):int(p3)]
                     region = cv2.cvtColor(region, cv2.COLOR_RGB2BGR)
                     img = Image.fromarray(region)
                     relativePath = 'gallery/'+str(index)+'-'+str(j)+'.jpg'
                     resultFileName=os.getcwd()+'/' +relativePath
+                    writer.writerow([index+1,relativePath])
                     writer.writerow([index+1,relativePath])
                     img.save(resultFileName)
                     print(cls, score)
