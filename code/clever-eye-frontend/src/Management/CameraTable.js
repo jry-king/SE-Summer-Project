@@ -208,14 +208,15 @@ class CameraTable extends Component{
         }
 
             let msg = {
-                "cameraid":encodeURIComponent(this.state.cameraid),
-                "param1":encodeURIComponent(this.state.param1),
-                "param2":encodeURIComponent(this.state.param2),
-                "param3":+encodeURIComponent(this.state.param3),
-                "x":+encodeURIComponent(this.state.x),
-                "y":encodeURIComponent(this.state.y),
-                "areaid":+encodeURIComponent(this.state.areaid)
+                "cameraid":this.state.cameraid,
+                "param1":this.state.param1,
+                "param2":this.state.param2,
+                "param3":this.state.param3,
+                "x":this.state.x,
+                "y":this.state.y,
+                "areaid":this.state.areaid
             }
+            console.log(JSON.stringify(msg))
 
             fetch(dataApi+"camera/save", {
                 method: 'post',
@@ -229,7 +230,7 @@ class CameraTable extends Component{
             })
             .then(res => res.json())
             .then(
-                (result)=>{
+                (result) => {
                     if (result.status){
                         message.error("Edit Error")
                         console.log(result.message)
