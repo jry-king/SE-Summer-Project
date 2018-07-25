@@ -1,0 +1,12 @@
+version: '2'
+services:
+  backend-loadbalance:
+    image: rancher/lb-service-haproxy:v0.9.1
+    ports:
+    - 8081:8081/tcp
+    labels:
+      io.rancher.container.agent.role: environmentAdmin,agent
+      io.rancher.container.agent_service.drain_provider: 'true'
+      io.rancher.container.create_agent: 'true'
+  gets-backend:
+    image: zzbslayer/gets-backend:latest

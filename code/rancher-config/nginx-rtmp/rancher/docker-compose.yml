@@ -1,0 +1,10 @@
+version: '2'
+services:
+  rtmp-nginx:
+    image: alfg/nginx-rtmp:latest
+    ports:
+     - "1935:1935"
+     - "8080:80"
+    volumes:
+     - /{your nginx.conf path}/nginx.conf:/opt/nginx/nginx.conf
+     - /{your video folder path}/video:/opt/video
