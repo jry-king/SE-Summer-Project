@@ -17,6 +17,10 @@ class MapManagement extends Component{
         this.getMaps()
     }
 
+    handleChange = (e) => {
+        this.setState({[e.target.name]:e.target.value})
+    }
+
     getMaps = () => {
         fetch(dataApi+"map/all", {
             method: 'get',
@@ -42,7 +46,7 @@ class MapManagement extends Component{
 
     deleteMap = (mapid) => {
         fetch(dataApi + "map/delete?mapid=" + mapid,{
-            method:'get',
+            method:'delete',
             credentials: 'include'
         })
         .then(res => res.json())
@@ -70,7 +74,7 @@ class MapManagement extends Component{
     }
 
     handleSave = () => {
-        if (this.state.map!=="" &&this.state.areaid!=="" ) {
+        if (this.state.map!==null &&this.state.areaid!==null ) {
             let msg = {
                 "mapid":0,
                 "map":this.state.map,
@@ -85,7 +89,6 @@ class MapManagement extends Component{
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(msg)
-
             })
             .then(res => res.json())
             .then(
@@ -96,7 +99,9 @@ class MapManagement extends Component{
                     }
                     else {
                         message.success("Save Success")
-                        this.setState({map:null,areaid:null})
+                        let maps = this.state.maps
+                        maps.push(result)
+                        this.setState({map:null,areaid:null,maps:maps})
                     }
                 },
                 (error) => {
@@ -157,6 +162,7 @@ class MapManagement extends Component{
                     <Col span={3}/>
                 </Row>
                 </div>
+                <br/><br/>
 			</div>
         )
     }

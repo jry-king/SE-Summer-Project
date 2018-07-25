@@ -1,5 +1,7 @@
 package com.zzbslayer.getsbackend.DataModel.Entity;
 
+import org.hibernate.annotations.BatchSize;
+
 import javax.persistence.*;
 
 @Entity
@@ -9,7 +11,7 @@ public class MapEntity {
     private int areaid;
     private String map;
 
-    @Basic
+    @Id
     @Column(name = "mapid", nullable = false)
     public int getMapid() {
         return mapid;
@@ -19,8 +21,8 @@ public class MapEntity {
         this.mapid = mapid;
     }
 
-    @Id
-    @Column(name = "areaid", nullable = false)
+    @Basic
+    @Column(name = "areaid", nullable = false, unique = true)
     public int getAreaid() {
         return areaid;
     }

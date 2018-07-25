@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import { Button, Input, Row } from 'antd'
 import { shallow, mount, render } from 'enzyme';
 
 import Map from './Utils/Map'
@@ -12,6 +13,7 @@ import MapRow from './Management/MapRow'
 import { dataApi, videoServer, hlsServer } from './Global'
 import LiveVideo from './LiveVideo/LiveVideo'
 import HistoryVideo from './HistoryVideo/HistoryVideo'
+import CameraRow from './Management/CameraRow';
 
 describe('Test <App/>', () => {
     it('renders without crashing', () => {
@@ -79,12 +81,111 @@ describe('Test <Header/>', () => {
     })
 })
 
+describe('Test <MapRow/>', () => {
+    test('<MapRow/> should render exactly as expected', () => {
+        const map = {
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }   
+        const wrapper = shallow(<MapRow map={map}/>)
+        const mapid = map.mapid
+        const mapimg = map.map
+        const areaid = map.areaid
+        expect(wrapper.contains(
+            <td name="mapid">{mapid}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td name="map"><img src={mapimg} alt={"map"+areaid} width={100} height={100}/></td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td name="areaid">{areaid}</td>
+        )).toBe(true)
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+
+    test('<MapRow/> should render exactly as expected when edit', () => {
+        const map = {
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }   
+        const wrapper = shallow(<MapRow map={map}/>)
+        wrapper.find('.edit').simulate('click')
+        expect(wrapper.find(Input)).toHaveLength(2)
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+
+    test('<MapRow/> should keep original data if cancel after edit', () => {
+        const map = {
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }   
+        const wrapper = shallow(<MapRow map={map}/>)
+        wrapper.find('.edit').simulate('click')
+
+        wrapper.find('.cancel').simulate('click')
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+
+    test('<MapRow/> should update data if edit and submit', () => {
+        const map = {
+            "mapid": 6,
+            "areaid": 1,
+            "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+        }   
+        const wrapper = shallow(<MapRow map={map}/>)
+        wrapper.find('.edit').simulate('click')
+        wrapper.find('.submit').simulate('click')
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+})
+
+describe('Test <CameraRow/>', () => {
+    test('<CameraRow/> should render exactly as expected', () => {
+        const camera = {
+            "cameraid": 1,
+            "param1": "param1",
+            "param2": "param2",
+            "param3": "param33",
+            "x": "20%",
+            "y": "10%",
+            "areaid": 1
+        }
+        const wrapper = shallow(<CameraRow camera={camera}/>)
+        expect(wrapper.contains(
+            <td>{camera.cameraid}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param1}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param2}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.param3}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.x}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.y}</td>
+        )).toBe(true)
+        expect(wrapper.contains(
+            <td>{camera.areaid}</td>
+        )).toBe(true)
+        expect(wrapper.find(Button)).toHaveLength(2)
+    })
+})
+
 function flushPromises() {
     return new Promise(resolve => setImmediate(resolve));
 }
 
 describe('Test <MapManagement/>', () => {
     test('After mounted, fetch should be called only once', () => {
+        fetch.resetMocks()
         fetch
             .once(JSON.stringify([
             {
@@ -122,6 +223,82 @@ describe('Test <MapManagement/>', () => {
         return flushPromises().then(() => {
             wrapper.update()
             expect(wrapper.state().maps.length).toEqual(wrapper.find(MapRow).length)
+        });
+    })
+    test('<MapManagement/> should render Row exactly as expected', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "mapid": 7,
+                "areaid": 0,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            },
+            {
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }
+        ]))
+        const wrapper = mount(<MapManagement/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            expect(wrapper.find(Row)).toHaveLength(2)
+        });
+    })
+    test('<MapManagement/> should render table exactly as expected', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "mapid": 7,
+                "areaid": 0,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            },
+            {
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }
+        ]))
+        const wrapper = mount(<MapManagement/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            expect(wrapper.find(".ant-table")).toHaveLength(1)
+            expect(wrapper.contains(
+                <tr>
+                    <th width={200}>Mapid</th>
+                    <th width={300}>Map</th>  
+                    <th width={200}>Areaid</th>
+                    <th width={200}>Edit</th>
+                    <th width={200}>Delete</th>
+                </tr>
+            )).toBe(true)
+        });
+    })
+    test('<MapManagement/> should update when new data added', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "mapid": 7,
+                "areaid": 0,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            },
+            {
+                "mapid": 6,
+                "areaid": 1,
+                "map": "https://cdn-images-1.medium.com/max/1600/1*P4Z6NIm0dHypW2NnXqinqg.jpeg"
+            }
+        ])) .once(JSON.stringify([
+            {
+                "mapid":0,
+                "areaid":120,
+                "map":"123"
+            }
+        ]))
+        const wrapper = mount(<MapManagement/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            expect(wrapper.find(Input)).toHaveLength(2)
+            wrapper.find(Button).first().simulate('click')
         });
     })
 })

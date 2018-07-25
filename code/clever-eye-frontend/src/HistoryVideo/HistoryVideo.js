@@ -41,12 +41,12 @@ class HistoryVideo extends Component {
                 else{
                     this.setState({
                         cameras: result,
-                        chosenCamera: "camera" + result[0].cameraid,
+                        chosenCamera: "camera" + result[0].cameraid
                     })
                 }
             },
             (error) => {
-                message.error("error")
+                message.error("Network Error")
                 console.log(error)
             }
         )
@@ -68,7 +68,7 @@ class HistoryVideo extends Component {
                     })
             },
             (error) => {
-                message.error("error")
+                message.error("Network Error")
                 console.log(error)
             }
         )
@@ -91,18 +91,26 @@ class HistoryVideo extends Component {
                 }
             },
             (error) => {
-                message.error("error")
+                message.error("Network Error")
                 console.log(error)
             }
         )
     }
 
     clickCamera = (cameraid) => {
-        this.setState({chosenCamera:"camera"+cameraid})
-        this.setState({chosenHistory: this.getChosenHistory(cameraid, this.state.history)})
+        this.setState({
+            chosenCamera:"camera"+cameraid,
+            chosenHistory: this.getChosenHistory(cameraid, this.state.history),
+            videoUrl: null
+        })
+
     }
 
     handleClick = () => {
+        if (this.state.videoUrl===null){
+            message.error("Error")
+            return
+        }
         window.location.href = "/video/history/"+encodeURIComponent(this.state.videoUrl);
     }
 
@@ -152,10 +160,10 @@ class HistoryVideo extends Component {
                                 <Col span={8}/>
                                 <Col span={3}><h2>选择摄像头</h2></Col>
                                 <Col span={3}>
-                                    <Select default={chosenCamera} style={{ width: 120 }} onChange={this.handleChangeCamera}>
+                                    <Select value={chosenCamera} style={{ width: 120 }} onChange={this.handleChangeCamera}>
                                     {
                                         cameras.map((camera) => {
-                                            return <Option key={camera.cameraid} id={camera.cameraid} value={camera.cameraid}>{"摄像头"+camera.cameraid}</Option>
+                                            return <Option key={camera.cameraid} id={camera.cameraid} value={camera.cameraid}>{"camera"+camera.cameraid}</Option>
                                         })
                                     }
                                     </Select>

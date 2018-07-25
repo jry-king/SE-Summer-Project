@@ -36,6 +36,15 @@ class VideoCrop extends Component {
         })
     }
 
+    uploadImage = () => {
+        let msg = "img="+encodeURIComponent(this.state.image)
+        fetch("localhost:5000/string", {
+            method: 'post',
+            credentials: 'include',
+            body: msg
+        })
+    }
+
     render(){
         return(
             <div className='monitorImage'>
@@ -63,7 +72,7 @@ class VideoCrop extends Component {
                 </div>
 
                 <br/><br/><br/>
-                <Button type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
+                <Button className="crop-btn" type="primary" size="large" onClick={this.captureOnClick}>截图</Button>
                 <br/><br/>
 				
 				<div className='initialImage'>

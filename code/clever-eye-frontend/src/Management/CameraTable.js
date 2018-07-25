@@ -251,7 +251,7 @@ class CameraTable extends Component{
             })
             .then(res => res.json())
             .then(
-                (result)=>{
+                (result) => {
                     if (result.status){
                         message.error("Edit Error")
                         console.log(result.message)
