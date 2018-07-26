@@ -41,10 +41,13 @@ class VideoCrop extends Component {
 
     uploadImage = () => {
         let msg = "img="+encodeURIComponent(this.state.image)
-        
         fetch(pyApi, {
             method: 'post',
+            mode:'cors',
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+              },
             body: msg
         })
         .then(result => result.json)
@@ -64,7 +67,7 @@ class VideoCrop extends Component {
             }
         )
     }
-
+    
     render(){
         return(
             <div className='monitorImage'>
