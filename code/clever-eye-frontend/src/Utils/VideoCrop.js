@@ -58,6 +58,7 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
+                console.log(result)
                 this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
                 
             },
@@ -87,8 +88,8 @@ class VideoCrop extends Component {
                             width={videoWidth} height={videoHeight} 
                             data-setup='{}'>
 
-                            <source src={ this.props.videoUrl } type={this.props.videoType} />
-
+                            <source src={ this.props.videoUrl + ".webm" } type='video/webm; codecs="vp8, vorbis"' />
+                            <source src={ this.props.videoUrl + ".mp4"} type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
                         </video>
                         </Col>
                     </Row>

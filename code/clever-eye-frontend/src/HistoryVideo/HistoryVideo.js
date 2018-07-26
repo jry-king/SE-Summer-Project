@@ -6,7 +6,7 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const videoType = "video/webm"
+const videoType = ["video/webm","video/mp4"]
 
 class HistoryVideo extends Component {
 
@@ -137,7 +137,7 @@ class HistoryVideo extends Component {
     render() {
         const file = this.props.match.params.file
 
-        const videoUrl = videoServer + decodeURIComponent(file) + ".webm"
+        const videoUrl = videoServer + decodeURIComponent(file)
         const history = this.state.chosenHistory
         const cameras = this.state.cameras
         const map = this.state.map
