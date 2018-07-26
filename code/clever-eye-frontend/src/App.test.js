@@ -9,6 +9,7 @@ import Camera from './Utils/Camera'
 import VideoCrop from './Utils/VideoCrop'
 import Header from './Utils/Header'
 import MapManagement from './Management/MapManagement'
+import CameraTable from './Management/CameraTable'
 import MapRow from './Management/MapRow'
 import { dataApi, videoServer, hlsServer } from './Global'
 import LiveVideo from './LiveVideo/LiveVideo'
@@ -272,6 +273,83 @@ describe('Test <MapManagement/>', () => {
         });
     })
 })
+
+describe('Test <CameraTable/>', () => {
+	    test('After mounted, fetch should be called only once', () => {
+		fetch.resetMocks()
+        fetch
+            .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            },
+            {
+                "cameraid": 2,
+                "areaid": 2,
+                "key": 2,
+				"param1": 2,
+                "param2": 2,
+                "param3": 2,
+				"x": 2,
+                "y": 2,
+            }
+        ]))
+        const wrapper = mount(<CameraTable/>)
+        return flushPromises().then(() => {
+			print(wrapper.state().cameras)
+            expect(fetch.mock.calls).toHaveLength(1);
+		});
+		})
+		
+		test('<CameraTable/> should update when new data added', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            },
+            {
+                "cameraid": 2,
+                "areaid": 2,
+                "key": 2,
+				"param1": 2,
+                "param2": 2,
+                "param3": 2,
+				"x": 2,
+                "y": 2,
+            }
+        ])) .once(JSON.stringify([
+            {
+                "cameraid": 3,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            }
+        ]))
+        const wrapper = mount(<CameraTable/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            wrapper.find(Button).first().simulate('click')
+        });
+    })
+})
+
 
 describe('Test <LiveVideo/>', () => {
     test('After mounted, fetch should be called twice', () => {

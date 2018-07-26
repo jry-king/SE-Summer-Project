@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
 import { Cropper } from 'react-image-cropper'
-import { Button, Row, Col, message } from 'antd'
+import { Button, Row, Col, message, Radio } from 'antd'
 import { pyApi } from '../Global'
 
 const videoWidth = 800
@@ -9,6 +9,7 @@ const style = {
     width: 300,
     height: 300
 }
+const RadioGroup = Radio.Group;
 
 class VideoCrop extends Component {
     constructor(props){
@@ -17,8 +18,15 @@ class VideoCrop extends Component {
             imgSrc: null,
             imageLoaded: false,
 
-            resultFlag: false
+            uri: "stream",
+            resultFlag: false,
         }
+    }
+
+    onChange = (e) => {
+        this.setState({
+            value: e.target.value,
+        });
     }
 
     captureOnClick = () => {
@@ -44,13 +52,17 @@ class VideoCrop extends Component {
 
     uploadImage = () => {
         let msg = "img="+encodeURIComponent(this.state.image)
-
-        fetch(pyApi, {
+        let uri = this.state.uri
+        fetch(pyApi + uri, {
             method: 'post',
+            mode:'cors',
             credentials: 'include',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'
+              },
             body: msg
         })
-        .then(result => result.json)
+        .then(result => result.json())
         .then(
             (result) =>{
                 if (result.status){
@@ -58,8 +70,8 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: result.image})
-
+                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
+                
             },
             (error) => {
                 message.error("Network Error")
@@ -72,7 +84,7 @@ class VideoCrop extends Component {
        this.setState({resultFlag: true, resultImage: image})
        */
     }
-
+    
     render(){
         return(
             <div className='monitorImage'>
@@ -157,6 +169,10 @@ class VideoCrop extends Component {
                         </tr>
                         <tr>
                             <td>
+                                <RadioGroup onChange={this.onChange} value={this.state.uri}>
+                                    <Radio value="stream">Live</Radio>
+                                    <Radio value="history">History</Radio>
+                                </RadioGroup>
                                 <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
                             </td>
                             <td/>
