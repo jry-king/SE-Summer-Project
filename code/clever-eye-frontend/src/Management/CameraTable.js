@@ -22,9 +22,6 @@ function hasErrors(fieldsError) {
 
 
 const rowSelection = {
-    onChange: (selectedRowKeys, selectedRows) => {
-        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
     getCheckboxProps: record => ({
         disabled: record.name === 'Disabled User', // Column configuration not to be checked
         name: record.name,
@@ -193,7 +190,6 @@ class CameraTable extends Component{
 	
 
     onChange = (pagination, filters, sorter) => {
-        console.log('Various parameters', pagination, filters, sorter);
         this.setState({
             filteredInfo: Search.value,
         });
@@ -210,21 +206,13 @@ class CameraTable extends Component{
 
     save(key) {
         const newData = [...this.state.data];
-		
-		console.log(key)
-		console.log(newData)
-		
         const target = newData.filter(item => key === item.key)[0];
-		
-		console.log(target)
-
 
         if (target) {
             delete target.editable;
             this.setState({ data: newData });
             this.cacheData = newData.map(item => ({ ...item }));
         }
-
             let msg = {
                 "cameraid":target.cameraid,
                 "param1":target.param1,
@@ -234,9 +222,6 @@ class CameraTable extends Component{
                 "y":target.y,
                 "areaid":target.areaid
             }
-			
-			console.log(msg)
-
 
             fetch(dataApi+"camera/save", {
                 method: 'post',
@@ -332,10 +317,8 @@ class CameraTable extends Component{
 			e.preventDefault();
 			this.props.form.validateFields((err, values) => {
 			  if (!err) {
-				console.log('Received values of form: ', values);
 					let msg = values;
 					msg['cameraid'] = 0;
-					console.log('msg: ',msg);
 				
 				fetch(dataApi+"camera/save", {
 					method: 'post',
@@ -373,7 +356,6 @@ class CameraTable extends Component{
 			cameras[id]["key"]=cameras[id]["cameraid"];
 		}
         const columns = this.columns;
-		console.log(this.props.form)
 		const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 		// Only show error after a field is touched.
 		const Param1Error = isFieldTouched('Param1') && getFieldError('Param1');

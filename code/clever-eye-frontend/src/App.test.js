@@ -61,16 +61,17 @@ describe('Test <MyMenu/>', () => {
 
 describe('Test <VideoCrop/>', () => {
     test('<VideoCrop/> should play correct video src',() => {
-        let src = videoServer + 'test.webm'
-        let type = "video/webm"
-        const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
-        expect(wrapper.find({src: src, type: type})).toHaveLength(1)
+        let src = videoServer + 'test'
+        const wrapper = shallow(<VideoCrop videoUrl={src} />)
+        expect(wrapper.find({src: src + '.webm'})).toHaveLength(1)
+        expect(wrapper.find({src: src + '.mp4'})).toHaveLength(1)
+        expect(wrapper.find({src: src + '.m3u8'})).toHaveLength(1)
     })
 
     test('<VideoCrop/> should only display one button at first',() => {
-        let src = videoServer + 'test.webm'
+        let src = videoServer + 'test'
         let type = "video/webm"
-        const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
+        const wrapper = shallow(<VideoCrop videoUrl={src} />)
         expect(wrapper.find({type:'primary'})).toHaveLength(1)
     })
 })
