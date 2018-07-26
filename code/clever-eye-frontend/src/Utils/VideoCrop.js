@@ -1,6 +1,6 @@
 import React, { Component} from 'react'
 import { Cropper } from 'react-image-cropper'
-import { Button, Row, Col } from 'antd'
+import { Button, Row, Col, message } from 'antd'
 import { pyApi } from '../Global'
 
 const videoWidth = 800
@@ -50,7 +50,7 @@ class VideoCrop extends Component {
               },
             body: msg
         })
-        .then(result => result.json)
+        .then(result => result.json())
         .then(
             (result) =>{
                 if (result.status){
@@ -58,8 +58,8 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: result.image})
-
+                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
+                
             },
             (error) => {
                 message.error("Network Error")
