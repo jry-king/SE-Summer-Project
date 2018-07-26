@@ -53,6 +53,7 @@ class VideoCrop extends Component {
     uploadImage = () => {
         let msg = "img="+encodeURIComponent(this.state.image)
         let uri = this.state.uri
+        message.loading('Searching...', 0)
         fetch(pyApi + uri, {
             method: 'post',
             mode:'cors',
@@ -65,6 +66,7 @@ class VideoCrop extends Component {
         .then(result => result.json())
         .then(
             (result) =>{
+                message.destroy()
                 if (result.status){
                     message.error("ReID Error")
                     console.log(result.message)
@@ -74,6 +76,7 @@ class VideoCrop extends Component {
                 
             },
             (error) => {
+                message.destroy()
                 message.error("Network Error")
                 console.log(error)
             }
