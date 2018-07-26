@@ -1,11 +1,14 @@
 import React, { Component} from 'react'
 import { Cropper } from 'react-image-cropper'
-import { Button, Row, Col } from 'antd'
+import { Button, Row, Col, message } from 'antd'
 import { pyApi } from '../Global'
 
 const videoWidth = 800
 const videoHeight = 400
-
+const style = {
+    width: 300,
+    height: 300
+}
 
 class VideoCrop extends Component {
     constructor(props){
@@ -41,7 +44,7 @@ class VideoCrop extends Component {
 
     uploadImage = () => {
         let msg = "img="+encodeURIComponent(this.state.image)
-        
+
         fetch(pyApi, {
             method: 'post',
             credentials: 'include',
@@ -63,6 +66,11 @@ class VideoCrop extends Component {
                 console.log(error)
             }
         )
+
+        /*
+       let image = "http://image.bee-ji.com/127579"
+       this.setState({resultFlag: true, resultImage: image})
+       */
     }
 
     render(){
@@ -84,7 +92,9 @@ class VideoCrop extends Component {
                             width={videoWidth} height={videoHeight} 
                             data-setup='{}'>
 
-                            <source src={ this.props.videoUrl } type={this.props.videoType} />
+                            <source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
+                            <source src={ this.props.videoUrl + ".webm"} type="video/webm" />
+                            <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
 
                         </video>
                         </Col>
@@ -119,30 +129,41 @@ class VideoCrop extends Component {
                 }
 				</div>
 				
-				<Row className="after-img">
-                <Col span={3}/>
-				{
-					this.state.image?
-					<Col span={5}>
-						<h3>最终画面</h3>
-						<div>
-                            <img src={this.state.image} alt="crop"/>
-                            <br/>
-                            <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
-						</div>
-					</Col> : null
-                }
                 {
-                    this.state.resultFlag?
-                    <Col span={5}>
-                        <h3>搜索结果</h3>
-                        <div>
-                            <img src={this.state.resultImage} alt="result"/>
-                            <br/>
-						</div>
-                    </Col>:null
+                    this.state.image?
+                    <table >
+                    <thead>
+                        <tr>
+                            <th width={400}>最终画面</th>
+                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            {
+                                this.state.resultFlag?
+                                    <th width={400}>搜索结果</th>:<th width={400}/>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src={this.state.image} style={style} alt="crop"/>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            {
+                                this.state.resultFlag?
+                                <td>
+                                    <img src={this.state.resultImage} style={style} alt="result"/>
+                                </td>:<td width={400}/>
+                            }
+                        </tr>
+                        <tr>
+                            <td>
+                                <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
+                            </td>
+                            <td/>
+                        </tr>
+                    </tbody>
+                    </table>:null
                 }
-				</Row>
             </div>
         )
     }

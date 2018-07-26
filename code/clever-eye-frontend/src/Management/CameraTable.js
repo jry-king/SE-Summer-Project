@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import CameraRow from './CameraRow'
 import { dataApi } from '../Global'
 import { message } from 'antd'
 import { Icon,Form, Table, Input, Button, Popconfirm } from 'antd';
