@@ -9,6 +9,9 @@ const style = {
     width: 300,
     height: 300
 }
+const resultStyle={
+    height: 300
+}
 const RadioGroup = Radio.Group;
 
 class VideoCrop extends Component {
@@ -53,7 +56,7 @@ class VideoCrop extends Component {
     uploadImage = () => {
         
         message.loading('Searching...', 0)
-        /*
+        
         let msg = "img="+encodeURIComponent(this.state.image)
         let uri = this.state.value
         fetch(pyApi + uri, {
@@ -74,7 +77,9 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename, time: result.time})
+
+                console.log(result)
+                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
                 
             },
             (error) => {
@@ -82,12 +87,12 @@ class VideoCrop extends Component {
                 message.error("Network Error")
                 console.log(error)
             }
-        )*/
+        )
 
         
-       let image = "http://image.bee-ji.com/127579"
+       /*(let image = "http://image.bee-ji.com/127579"
        this.setState({resultFlag: true, resultImage: image})
-       message.destroy()
+       message.destroy()*/
     }
     
     render(){
@@ -113,7 +118,6 @@ class VideoCrop extends Component {
                                 <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
                                 :<source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
                             }                            
-
                         </video>
                         </Col>
                     </Row>
@@ -169,10 +173,11 @@ class VideoCrop extends Component {
                             {
                                 this.state.resultFlag?
                                 <td>
-                                    <img src={this.state.resultImage} style={style} alt="result"/>
+                                    <img src={this.state.resultImage} style={resultStyle} alt="result"/>
                                 </td>:<td width={400}/>
                             }
                         </tr>
+                        <br/>
                         <tr>
                             <td>
                                 <RadioGroup onChange={this.onChange} value={this.state.value}>

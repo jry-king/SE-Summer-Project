@@ -113,15 +113,14 @@ def run_inference_for_single_image(image, graph):
   return output_dict
 
  # video
-import imageio
-imageio.plugins.ffmpeg.download()
+
 
 from moviepy.editor import VideoFileClip
-from IPython.display import HTML
+
 def main(argv):
-    clip1 = VideoFileClip(argv[1]).subclip(int(argv[2]),int(argv[3])).without_audio().set_fps(1)
+    clip1 = VideoFileClip(argv[1]).without_audio().set_fps(1)
     index = 0
-    csvFile = open('info_query.csv','w')
+    csvFile = open('info.csv','w')
     writer = csv.writer(csvFile)
     for image_np in clip1.iter_frames(1,False,True,None):
         # save origin picture for chopping
@@ -141,12 +140,11 @@ def main(argv):
             p4=(output_dict['detection_boxes'][j][2]*img_size[1]).round()
             region_np = origin_np[int(p2):int(p4),int(p1):int(p3)]
             img=Image.fromarray(region_np)
-            relativePath = 'results/'+str(index)+'-'+str(j)+'.jpg'
+            relativePath = 'results/'+'1-'+str(index+1)+'-'+str(j)+'.jpg'
             resultFileName=os.getcwd()+'/' +relativePath
-            writer.writerow([index+1,relativePath])
+            writer.writerow([index+1,'1-'+str(index+1)+'-'+str(j)+'.jpg'])
+            writer.writerow([index+1,'1-'+str(index+1)+'-'+str(j)+'.jpg'])
             img.save(resultFileName)
-            plt.figure(figsize=(1920,1080))
-
         index=index+1
     csvFile.close()
 
