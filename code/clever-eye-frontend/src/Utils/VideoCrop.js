@@ -9,6 +9,9 @@ const style = {
     width: 300,
     height: 300
 }
+const resultStyle={
+    height: 300
+}
 const RadioGroup = Radio.Group;
 
 class VideoCrop extends Component {
@@ -53,7 +56,7 @@ class VideoCrop extends Component {
     uploadImage = () => {
         
         message.loading('Searching...', 0)
-        /*
+        
         let msg = "img="+encodeURIComponent(this.state.image)
         let uri = this.state.value
         fetch(pyApi + uri, {
@@ -74,7 +77,13 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename, time: result.time})
+
+                console.log(result)
+                this.setState({resultFlag: true, 
+                    resultImage: "data:image/jpeg;base64,"+result.picture, 
+                    filename: result.filename,
+                    time: result.time
+                })
                 
             },
             (error) => {
@@ -82,15 +91,20 @@ class VideoCrop extends Component {
                 message.error("Network Error")
                 console.log(error)
             }
-        )*/
+        )
 
         
-       let image = "http://image.bee-ji.com/127579"
+       /*(let image = "http://image.bee-ji.com/127579"
        this.setState({resultFlag: true, resultImage: image})
-       message.destroy()
+       message.destroy()*/
     }
     
     render(){
+        let filename = this.state.filename
+        let id
+        if (this.state.resultFlag === true){
+            id = filename.split('-')[0]
+        }
         return(
             <div className='monitorImage'>
                 <h2 >监控画面</h2>
@@ -108,12 +122,11 @@ class VideoCrop extends Component {
                             poster={ this.props.poster }
                             width={videoWidth} height={videoHeight} 
                             data-setup='{}'>
-
-                            <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
-                            <source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
-                            <source src={ this.props.videoUrl + ".webm"} type="video/webm" />
-                            
-
+                            {
+                                this.props.live?
+                                <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
+                                :<source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
+                            }                            
                         </video>
                         </Col>
                     </Row>
@@ -169,10 +182,11 @@ class VideoCrop extends Component {
                             {
                                 this.state.resultFlag?
                                 <td>
-                                    <img src={this.state.resultImage} style={style} alt="result"/>
+                                    <img src={this.state.resultImage} style={resultStyle} alt="result"/>
                                 </td>:<td width={400}/>
                             }
                         </tr>
+                        <br/>
                         <tr>
                             <td>
                                 <RadioGroup onChange={this.onChange} value={this.state.value}>
@@ -181,7 +195,10 @@ class VideoCrop extends Component {
                                 </RadioGroup>
                                 <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
                             </td>
-                            <td/>
+                            {
+                                this.state.resultFlag?
+                                <td>{'id: '+ id + '\ntime:'+this.state.time}</td>:<td/>
+                            }
                         </tr>
                     </tbody>
                     </table>:null
