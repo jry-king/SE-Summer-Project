@@ -79,7 +79,11 @@ class VideoCrop extends Component {
                 }
 
                 console.log(result)
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
+                this.setState({resultFlag: true, 
+                    resultImage: "data:image/jpeg;base64,"+result.picture, 
+                    filename: result.filename,
+                    time: result.time
+                })
                 
             },
             (error) => {
@@ -96,6 +100,11 @@ class VideoCrop extends Component {
     }
     
     render(){
+        let filename = this.state.filename
+        let id
+        if (this.state.resultFlag === true){
+            id = filename.split('-')[0]
+        }
         return(
             <div className='monitorImage'>
                 <h2 >监控画面</h2>
@@ -186,7 +195,10 @@ class VideoCrop extends Component {
                                 </RadioGroup>
                                 <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
                             </td>
-                            <td/>
+                            {
+                                this.state.resultFlag?
+                                <td>{'id: '+ id + '\ntime:'+this.state.time}</td>:<td/>
+                            }
                         </tr>
                     </tbody>
                     </table>:null
