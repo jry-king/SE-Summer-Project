@@ -1,11 +1,15 @@
 import React, { Component} from 'react'
 import { Cropper } from 'react-image-cropper'
-import { Button, Row, Col, message } from 'antd'
+import { Button, Row, Col, message, Radio } from 'antd'
 import { pyApi } from '../Global'
 
 const videoWidth = 800
 const videoHeight = 400
-
+const style = {
+    width: 300,
+    height: 300
+}
+const RadioGroup = Radio.Group;
 
 class VideoCrop extends Component {
     constructor(props){
@@ -14,8 +18,15 @@ class VideoCrop extends Component {
             imgSrc: null,
             imageLoaded: false,
 
-            resultFlag: false
+            value: "stream",
+            resultFlag: false,
         }
+    }
+
+    onChange = (e) => {
+        this.setState({
+            value: e.target.value
+        });
     }
 
     captureOnClick = () => {
@@ -40,8 +51,12 @@ class VideoCrop extends Component {
     }
 
     uploadImage = () => {
+        
+        message.loading('Searching...', 0)
+        /*
         let msg = "img="+encodeURIComponent(this.state.image)
-        fetch(pyApi, {
+        let uri = this.state.value
+        fetch(pyApi + uri, {
             method: 'post',
             mode:'cors',
             credentials: 'include',
@@ -53,20 +68,28 @@ class VideoCrop extends Component {
         .then(result => result.json())
         .then(
             (result) =>{
+                message.destroy()
                 if (result.status){
                     message.error("ReID Error")
                     console.log(result.message)
                     return
                 }
+
                 console.log(result)
                 this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
                 
             },
             (error) => {
+                message.destroy()
                 message.error("Network Error")
                 console.log(error)
             }
-        )
+        )*/
+
+        
+       let image = "http://image.bee-ji.com/127579"
+       this.setState({resultFlag: true, resultImage: image})
+       message.destroy()
     }
     
     render(){
@@ -88,8 +111,10 @@ class VideoCrop extends Component {
                             width={videoWidth} height={videoHeight} 
                             data-setup='{}'>
 
-                            <source src={ this.props.videoUrl + ".webm" } type='video/webm; codecs="vp8, vorbis"' />
-                            <source src={ this.props.videoUrl + ".mp4"} type='video/mp4; codecs="avc1.42E01E, mp4a.40.2"' />
+                            <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
+                            <source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
+                            <source src={ this.props.videoUrl + ".webm"} type="video/webm" />
+
                         </video>
                         </Col>
                     </Row>
@@ -123,30 +148,45 @@ class VideoCrop extends Component {
                 }
 				</div>
 				
-				<Row className="after-img">
-                <Col span={3}/>
-				{
-					this.state.image?
-					<Col span={5}>
-						<h3>最终画面</h3>
-						<div>
-                            <img src={this.state.image} alt="crop"/>
-                            <br/>
-                            <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
-						</div>
-					</Col> : null
-                }
                 {
-                    this.state.resultFlag?
-                    <Col span={5}>
-                        <h3>搜索结果</h3>
-                        <div>
-                            <img src={this.state.resultImage} alt="result"/>
-                            <br/>
-						</div>
-                    </Col>:null
+                    this.state.image?
+                    <table >
+                    <thead>
+                        <tr>
+                            <th width={400}>最终画面</th>
+                            <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+                            {
+                                this.state.resultFlag?
+                                    <th width={400}>搜索结果</th>:<th width={400}/>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <img src={this.state.image} style={style} alt="crop"/>
+                            </td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            {
+                                this.state.resultFlag?
+                                <td>
+                                    <img src={this.state.resultImage} style={style} alt="result"/>
+                                </td>:<td width={400}/>
+                            }
+                        </tr>
+                        <tr>
+                            <td>
+                                <RadioGroup onChange={this.onChange} value={this.state.value}>
+                                    <Radio value="stream">Live</Radio>
+                                    <Radio value="history">History</Radio>
+                                </RadioGroup>
+                                <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
+                            </td>
+                            <td/>
+                        </tr>
+                    </tbody>
+                    </table>:null
                 }
-				</Row>
             </div>
         )
     }
