@@ -74,7 +74,9 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename, time: result.time})
+
+                console.log(result)
+                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
                 
             },
             (error) => {
@@ -112,7 +114,6 @@ class VideoCrop extends Component {
                             <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
                             <source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
                             <source src={ this.props.videoUrl + ".webm"} type="video/webm" />
-                            
 
                         </video>
                         </Col>
