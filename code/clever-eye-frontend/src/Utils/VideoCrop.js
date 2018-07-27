@@ -18,14 +18,14 @@ class VideoCrop extends Component {
             imgSrc: null,
             imageLoaded: false,
 
-            uri: "stream",
+            value: "stream",
             resultFlag: false,
         }
     }
 
     onChange = (e) => {
         this.setState({
-            value: e.target.value,
+            value: e.target.value
         });
     }
 
@@ -51,8 +51,11 @@ class VideoCrop extends Component {
     }
 
     uploadImage = () => {
+        
+        message.loading('Searching...', 0)
+        /*
         let msg = "img="+encodeURIComponent(this.state.image)
-        let uri = this.state.uri
+        let uri = this.state.value
         fetch(pyApi + uri, {
             method: 'post',
             mode:'cors',
@@ -65,24 +68,26 @@ class VideoCrop extends Component {
         .then(result => result.json())
         .then(
             (result) =>{
+                message.destroy()
                 if (result.status){
                     message.error("ReID Error")
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename})
+                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename, time: result.time})
                 
             },
             (error) => {
+                message.destroy()
                 message.error("Network Error")
                 console.log(error)
             }
-        )
+        )*/
 
-        /*
+        
        let image = "http://image.bee-ji.com/127579"
        this.setState({resultFlag: true, resultImage: image})
-       */
+       message.destroy()
     }
     
     render(){
@@ -104,9 +109,10 @@ class VideoCrop extends Component {
                             width={videoWidth} height={videoHeight} 
                             data-setup='{}'>
 
+                            <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
                             <source src={ this.props.videoUrl + ".mp4" } type="video/mp4" />
                             <source src={ this.props.videoUrl + ".webm"} type="video/webm" />
-                            <source src={ this.props.videoUrl + ".m3u8"} type="application/x-mpegURL" />
+                            
 
                         </video>
                         </Col>
@@ -169,7 +175,7 @@ class VideoCrop extends Component {
                         </tr>
                         <tr>
                             <td>
-                                <RadioGroup onChange={this.onChange} value={this.state.uri}>
+                                <RadioGroup onChange={this.onChange} value={this.state.value}>
                                     <Radio value="stream">Live</Radio>
                                     <Radio value="history">History</Radio>
                                 </RadioGroup>
