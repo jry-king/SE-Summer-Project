@@ -5,11 +5,9 @@ services:
     volumes:
     - /root/website/logs:/var/log/nginx
     - /root/video:/opt/video
-    command:
-    - /bin/bash
-    - -c
-    - nginx -g 'daemon off;'
-  web-loadbalance:
+    labels:
+      io.rancher.container.pull_image: always
+  website-loadbalance:
     image: rancher/lb-service-haproxy:v0.9.1
     ports:
     - 80:80/tcp

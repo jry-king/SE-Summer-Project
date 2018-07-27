@@ -3,7 +3,7 @@ services:
   gets-nginx:
     scale: 2
     start_on_create: true
-  web-loadbalance:
+  website-loadbalance:
     scale: 1
     start_on_create: true
     lb_config:

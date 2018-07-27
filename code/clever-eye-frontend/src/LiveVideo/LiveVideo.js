@@ -6,8 +6,6 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const videoType = "application/x-mpegURL"
-
 class LiveVideo extends Component {
 
     constructor(props){
@@ -85,7 +83,7 @@ class LiveVideo extends Component {
     render() {
         const cameras = this.state.cameras
         const camera = this.props.match.params.camera
-        const videoUrl = hlsServer + camera + ".m3u8"
+        const videoUrl = hlsServer + camera
         const map = this.state.map
         const chosenCamera = this.state.chosenCamera
         return (
@@ -96,7 +94,7 @@ class LiveVideo extends Component {
                 </header>
                 <br/>
                 {
-                    camera?<VideoCrop className='liveVideo'  videoUrl={videoUrl} videoType={videoType}/>:
+                    camera?<VideoCrop className='liveVideo'  videoUrl={videoUrl} live={true}/>:
                     (
                         cameras?
                         <div>
