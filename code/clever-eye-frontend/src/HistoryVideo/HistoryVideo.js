@@ -117,8 +117,6 @@ class HistoryVideo extends Component {
 
     handleChangeCamera = (value) => {
         this.setState({chosenCamera:"camera"+value})
-        console.log(value)
-        console.log(this.state.history)
         this.setState({chosenHistory: this.getChosenHistory(value, this.state.history)})
     }
 	
@@ -153,7 +151,7 @@ class HistoryVideo extends Component {
                 </header>
                 <br/>
                 {
-                    file?<VideoCrop className="videoCrop" videoUrl={videoUrl}/>:
+                    file?<VideoCrop className="videoCrop" videoUrl={videoUrl} live={false}/>:
                     (
                         cameras?
                         <div>
