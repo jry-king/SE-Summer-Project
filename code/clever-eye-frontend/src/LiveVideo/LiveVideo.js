@@ -94,7 +94,7 @@ class LiveVideo extends Component {
                 </header>
                 <br/>
                 {
-                    camera?<VideoCrop className='liveVideo'  videoUrl={videoUrl}/>:
+                    camera?<VideoCrop className='liveVideo'  videoUrl={videoUrl} live={true}/>:
                     (
                         cameras?
                         <div>
