@@ -6,8 +6,6 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const videoType = "application/x-mpegURL"
-
 class LiveVideo extends Component {
 
     constructor(props){
