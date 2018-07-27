@@ -6,8 +6,6 @@ import Map from '../Utils/Map'
 import VideoCrop from '../Utils/VideoCrop'
 const Option = Select.Option
 
-const videoType = ["video/webm","video/mp4"]
-
 class HistoryVideo extends Component {
 
     constructor(props){
@@ -152,7 +150,7 @@ class HistoryVideo extends Component {
                 </header>
                 <br/>
                 {
-                    file?<VideoCrop className="videoCrop" videoUrl={videoUrl} videoType={videoType}/>:
+                    file?<VideoCrop className="videoCrop" videoUrl={videoUrl}/>:
                     (
                         cameras?
                         <div>

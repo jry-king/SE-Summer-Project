@@ -34,7 +34,8 @@
       "!<rootDir>/build",
       "!src/index.js",
       "!src/registerServiceWorker.js",
-      "!src/Utils/VideoCrop.js"
+      "!src/Utils/VideoCrop.js",
+      "!src/Management/*"
     ]
   }
 }

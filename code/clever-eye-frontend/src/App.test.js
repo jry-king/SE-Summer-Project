@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { Button, Input, Row } from 'antd'
+import { Button, Input, Row, Menu } from 'antd'
 import { shallow, mount, render } from 'enzyme';
 
 import Map from './Utils/Map'
@@ -9,11 +9,12 @@ import Camera from './Utils/Camera'
 import VideoCrop from './Utils/VideoCrop'
 import Header from './Utils/Header'
 import MapManagement from './Management/MapManagement'
+import CameraTable from './Management/CameraTable'
 import MapRow from './Management/MapRow'
 import { dataApi, videoServer, hlsServer } from './Global'
 import LiveVideo from './LiveVideo/LiveVideo'
 import HistoryVideo from './HistoryVideo/HistoryVideo'
-import CameraRow from './Management/CameraRow';
+import MyMenu from './MyMenu/MyMenu';
 
 describe('Test <App/>', () => {
     it('renders without crashing', () => {
@@ -48,21 +49,29 @@ describe('Test <Map/>', () => {
     test('<Map/> should renders correct number of <Camera/>',() => {
         const wrapper = shallow(<Map cameras={cameras} />)
         expect(wrapper.find(Camera)).toHaveLength(2);
-    });
-});
+    })
+})
+
+describe('Test <MyMenu/>', () => {
+    test('<MyMenu/> should render correct number of Menu.Item'),() => {
+        const wrapper = shallow(<MyMenu/>)
+        expect(wrapper.find(Menu.Item)).toHaveLength(4)
+    }
+})
 
 describe('Test <VideoCrop/>', () => {
     test('<VideoCrop/> should play correct video src',() => {
-        let src = videoServer + 'test.webm'
-        let type = "video/webm"
-        const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
-        expect(wrapper.find({src: src, type: type})).toHaveLength(1)
+        let src = videoServer + 'test'
+        const wrapper = shallow(<VideoCrop videoUrl={src} />)
+        expect(wrapper.find({src: src + '.webm'})).toHaveLength(1)
+        expect(wrapper.find({src: src + '.mp4'})).toHaveLength(1)
+        expect(wrapper.find({src: src + '.m3u8'})).toHaveLength(1)
     })
 
     test('<VideoCrop/> should only display one button at first',() => {
-        let src = videoServer + 'test.webm'
+        let src = videoServer + 'test'
         let type = "video/webm"
-        const wrapper = shallow(<VideoCrop videoUrl={src} videoType={type}/>)
+        const wrapper = shallow(<VideoCrop videoUrl={src} />)
         expect(wrapper.find({type:'primary'})).toHaveLength(1)
     })
 })
@@ -138,43 +147,6 @@ describe('Test <MapRow/>', () => {
         const wrapper = shallow(<MapRow map={map}/>)
         wrapper.find('.edit').simulate('click')
         wrapper.find('.submit').simulate('click')
-        expect(wrapper.find(Button)).toHaveLength(2)
-    })
-})
-
-describe('Test <CameraRow/>', () => {
-    test('<CameraRow/> should render exactly as expected', () => {
-        const camera = {
-            "cameraid": 1,
-            "param1": "param1",
-            "param2": "param2",
-            "param3": "param33",
-            "x": "20%",
-            "y": "10%",
-            "areaid": 1
-        }
-        const wrapper = shallow(<CameraRow camera={camera}/>)
-        expect(wrapper.contains(
-            <td>{camera.cameraid}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.param1}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.param2}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.param3}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.x}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.y}</td>
-        )).toBe(true)
-        expect(wrapper.contains(
-            <td>{camera.areaid}</td>
-        )).toBe(true)
         expect(wrapper.find(Button)).toHaveLength(2)
     })
 })
@@ -302,6 +274,83 @@ describe('Test <MapManagement/>', () => {
         });
     })
 })
+
+describe('Test <CameraTable/>', () => {
+	    test('After mounted, fetch should be called only once', () => {
+		fetch.resetMocks()
+        fetch
+            .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            },
+            {
+                "cameraid": 2,
+                "areaid": 2,
+                "key": 2,
+				"param1": 2,
+                "param2": 2,
+                "param3": 2,
+				"x": 2,
+                "y": 2,
+            }
+        ]))
+        const wrapper = mount(<CameraTable/>)
+        return flushPromises().then(() => {
+			print(wrapper.state().cameras)
+            expect(fetch.mock.calls).toHaveLength(1);
+		});
+		})
+		
+		test('<CameraTable/> should update when new data added', () => {
+        fetch
+            .once(JSON.stringify([
+            {
+                "cameraid": 1,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            },
+            {
+                "cameraid": 2,
+                "areaid": 2,
+                "key": 2,
+				"param1": 2,
+                "param2": 2,
+                "param3": 2,
+				"x": 2,
+                "y": 2,
+            }
+        ])) .once(JSON.stringify([
+            {
+                "cameraid": 3,
+                "areaid": 1,
+                "key": 1,
+				"param1": 1,
+                "param2": 1,
+                "param3": 1,
+				"x": 1,
+                "y": 1,
+            }
+        ]))
+        const wrapper = mount(<CameraTable/>)
+        return flushPromises().then(() => {
+            wrapper.update()
+            wrapper.find(Button).first().simulate('click')
+        });
+    })
+})
+
 
 describe('Test <LiveVideo/>', () => {
     test('After mounted, fetch should be called twice', () => {
