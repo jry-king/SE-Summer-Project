@@ -74,7 +74,12 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-                this.setState({resultFlag: true, resultImage: "data:image/jpeg;base64,"+result.picture, filename: result.filename, time: result.time})
+                this.setState({
+                    resultFlag: true, 
+                    resultImage: "data:image/jpeg;base64,"+result.picture, 
+                    filename: result.filename, 
+                    time: result.time
+                })
                 
             },
             (error) => {
@@ -181,7 +186,12 @@ class VideoCrop extends Component {
                                 </RadioGroup>
                                 <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
                             </td>
-                            <td/>
+                            {
+                                this.state.resultFlag?
+                                <td>
+
+                                </td>:<td/>
+                            }
                         </tr>
                     </tbody>
                     </table>:null
