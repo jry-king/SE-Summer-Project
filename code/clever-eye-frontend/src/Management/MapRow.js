@@ -42,9 +42,9 @@ class MapRow extends Component {
     handleSubmit = () => {
         if (this.state.map!=="" &&this.state.areaid!=="" ) {
             let msg = {
-                "mapid":encodeURIComponent(this.state.mapid),
-                "map":encodeURIComponent(this.state.map),
-                "areaid":encodeURIComponent(this.state.areaid)
+                "mapid":this.state.mapid,
+                "map":this.state.map,
+                "areaid":this.state.areaid
             }
             fetch(dataApi+"map/save", {
                 method: 'post',
