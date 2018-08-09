@@ -77,16 +77,13 @@ class VideoCrop extends Component {
                     console.log(result.message)
                     return
                 }
-
-                console.log(result)
                 this.setState({
                     resultFlag: true, 
                     resultImage: "data:image/jpeg;base64,"+result.picture, 
                     filename: result.filename,
                     time: result.time,
                     id: result.id
-                })
-                
+                })    
             },
             (error) => {
                 message.destroy()

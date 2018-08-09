@@ -7,7 +7,7 @@ class MyMenu extends Component{
     constructor(props){
       	super(props)
       	this.state = {
-        	current: 'mail',
+        	current: 'home',
       	}
     }
     
