@@ -29,7 +29,10 @@ class LiveVideo extends Component {
     }
 
     handleChangeArea = (value) => {
-        this.setState({chosenArea:value})
+        this.setState({
+            chosenArea:value,
+            chosenCamera:null
+        })
     }
 
     handleChangeCamera = (value) => {
@@ -54,11 +57,8 @@ class LiveVideo extends Component {
                         if (idArray.indexOf(a) === -1 ){
                             idArray.push(a)
                             array[a] = []
-                            array[a].push(result[i])
                         }
-                        else{
-                            array[a].push(result[i])
-                        }
+                        array[a].push(result[i])
                     }
                     this.setState({
                         cameras: array,
@@ -73,30 +73,6 @@ class LiveVideo extends Component {
             }
         )
     }
-
-    /*
-    getCamera = () => {
-        fetch(dataApi + "camera?areaid=1",{
-            method: 'get',
-            credentials: 'include'
-        })
-        .then(res => res.json())
-        .then(
-            (result) => {
-                if (result.status)
-                    message.error(result.msg)
-                else
-                    this.setState({
-                        cameras: result,
-                        chosenCamera: "camera" + result[0].cameraid
-                    })
-            },
-            (error) => {
-                message.error("error")
-                console.log(error)
-            }
-        )
-    }*/
 
     getMap = () => {
         fetch(dataApi + "map/all",{
@@ -137,8 +113,6 @@ class LiveVideo extends Component {
         const idArray = this.state.idArray
         const cameras = this.state.cameras
 
-        console.log(chosenArea)
-        console.log(cameras)
         return (
             <div style={{ background: '#ECECEC'}}>
                 <header className="App-header">
@@ -166,7 +140,9 @@ class LiveVideo extends Component {
                                 <Col span={2}/>
                             </Row>
                             {
-                                chosenArea?<Row>
+                                chosenArea 
+                                && (cameras[chosenArea]!==null) 
+                                && (typeof(cameras[chosenArea])!=='undefined')?<Row>
                                     <Col span={8}/>
                                     <Col span={3}><h2>选择摄像头:</h2></Col>
                                     <Col span={3}>
@@ -181,7 +157,7 @@ class LiveVideo extends Component {
                                     <Col span={2}>
                                         <Button type="primary" size="large" onClick={this.handleClick}>播放</Button>
                                     </Col>
-                                </Row>:null
+                                </Row>:message.warning("No camera data")
                             }
                             <br/><br/><br/>
                             <Map cameras={cameras[chosenArea]} backgroundImage={map} clickCamera={this.clickCamera} chosenCamera={chosenCamera}/>
