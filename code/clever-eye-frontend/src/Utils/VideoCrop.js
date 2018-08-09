@@ -80,10 +80,10 @@ class VideoCrop extends Component {
                 this.setState({
                     resultFlag: true, 
                     resultImage: "data:image/jpeg;base64,"+result.picture, 
-                    filename: result.filename, 
-                    time: result.time
-                })
-                
+                    filename: result.filename,
+                    time: result.time,
+                    id: result.id
+                })    
             },
             (error) => {
                 message.destroy()
@@ -189,11 +189,10 @@ class VideoCrop extends Component {
                                 </RadioGroup>
                                 <Button type="primary" size="large" onClick={this.uploadImage}>上传</Button>
                             </td>
+                            <td/>
                             {
                                 this.state.resultFlag?
-                                <td>
-
-                                </td>:<td/>
+                                <td>{'source: '+ this.state.id + '\ntime:'+this.state.time}</td>:<td/>
                             }
                         </tr>
                     </tbody>
