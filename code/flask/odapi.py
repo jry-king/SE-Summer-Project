@@ -70,12 +70,12 @@ def download():
         encodestr = base64.b64encode(data)
     print(time.time()-start_time)
     res_time = filename.split('-')[1]
-    return json.dumps({'result': filename, "picture": str(encodestr,'utf-8'),"time":"Frame: "+res_time})
+    id = filename.split('-')[0]
+    return json.dumps({"id": id ,"result": filename, "picture": str(encodestr,'utf-8'),"time":"Frame "+res_time})
 
 @app.route("/stream", methods=['GET','POST'])
 def video():
     start_time = time.time()
-    print(start_time)
     postValues= request.form.get("img")
     image_data = re.sub('^data:image/.+;base64,', '', postValues)
     im = Image.open(BytesIO(base64.b64decode(image_data)))
@@ -123,13 +123,13 @@ def video():
         if index %2 == 0:
             if len(result) == 0:
                 return json.dumps({"status":500})
-            print(time.time()-start_time)
             filename=calcreid("tripletreid/experiment", "query_live.csv", "gallery_live.csv", "query_live", "gallery_live","query_embeddings.h5", "gallery_embedding.h5")
             with open('gallery_live/'+filename, 'rb') as f: 
                 data = f.read()
                 encodestr = base64.b64encode(data)
             print(time.time()-start_time)
-            return json.dumps({"result": filename, "picture": str(encodestr,'utf-8'), "time":cur_time})
+            id = filename.split('-')[0]
+            return json.dumps({"id":id ,"result": filename, "picture": str(encodestr,'utf-8'), "time":cur_time})
 
 
 if __name__ == '__main__':
