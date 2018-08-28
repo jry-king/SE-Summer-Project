@@ -1,0 +1,282 @@
+swagger: '2.0'
+info:
+  description: This is a sample server GETS-server.
+  version: 1.0.0
+  title: Gets API
+host: '47.106.8.44:8081'
+basePath: /api
+tags:
+  - name: Camera
+    description: API of Camera
+  - name: History
+    description: API of History
+  - name: Map
+    description: API of Map
+schemes:
+  - http
+  - https
+paths:
+  '/camera/areaid/{areaid}':
+    get:
+      tags:
+        - Camera
+      summary: Find camera by areaid
+      description: Returns a set of cameras
+      operationId: getCameraByAreaid
+      produces:
+        - application/json
+      parameters:
+        - name: areaid
+          in: path
+          description: Areaid of cameras to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Cameras'
+  '/camera/camreid/{cameraid}':
+    delete:
+      tags:
+        - Camera
+      summary: Deletes a camera by cameraid
+      description: ''
+      operationId: deleteCameraByCameraid
+      produces:
+        - application/json
+      parameters:
+        - name: cameraid
+          in: path
+          description: Pet id to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '404':
+          description: Camera not found
+  /camera:
+    post:
+      tags:
+        - Camera
+      summary: Save/Update a camera
+      description: Returns the camera posted
+      operationId: saveCamera
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: JSON camera to save
+          required: true
+          schema:
+            $ref: '#/definitions/Camera'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Camera'
+        '500':
+          description: Invalid Camera
+  '/history/areaid/{areaid}':
+    get:
+      tags:
+        - History
+      summary: Find history by areaid
+      description: Returns a set of histories
+      operationId: getHistoryByAreaid
+      produces:
+        - application/json
+      parameters:
+        - name: areaid
+          in: path
+          description: Areaid of histories to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Histories'
+  '/history/historyid/{historyid}':
+    delete:
+      tags:
+        - History
+      summary: Deletes a history by historyid
+      description: ''
+      operationId: deleteHistoryByHistoryid
+      produces:
+        - application/json
+      parameters:
+        - name: historyid
+          in: path
+          description: History id to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '404':
+          description: History not found
+  /history:
+    post:
+      tags:
+        - History
+      summary: Save/Update a history
+      description: Returns the history posted
+      operationId: saveHistory
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: JSON history to save
+          required: true
+          schema:
+            $ref: '#/definitions/Camera'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/History'
+        '500':
+          description: Invalid History
+  '/map/areaid/{areaid}':
+    get:
+      tags:
+        - Map
+      summary: Find map by areaid
+      description: Returns a set of maps
+      operationId: getMapByAreaid
+      produces:
+        - application/json
+      parameters:
+        - name: areaid
+          in: path
+          description: Areaid of maps to return
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Maps'
+  '/map/mapid/{mapid}':
+    delete:
+      tags:
+        - Map
+      summary: Deletes a map by mapid
+      description: ''
+      operationId: deleteMapByMapid
+      produces:
+        - application/json
+      parameters:
+        - name: mapid
+          in: path
+          description: Map id to delete
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '404':
+          description: Map not found
+  /map:
+    post:
+      tags:
+        - Map
+      summary: Save/Update a map
+      description: Returns the map posted
+      operationId: saveMap
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: JSON Map to save
+          required: true
+          schema:
+            $ref: '#/definitions/Map'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/Map'
+        '500':
+          description: Invalid Map
+definitions:
+  Camera:
+    type: object
+    properties:
+      cameraid:
+        type: integer
+        format: int64
+        example: '0'
+      param1:
+        type: string
+      param2:
+        type: string
+      param3:
+        type: string
+      x:
+        type: string
+        example: 81%
+        description: Percentage coordinates
+      'y':
+        type: string
+        example: 43%
+        description: Percentage coordinates
+      areaid:
+        type: integer
+        format: int64
+        example: '0'
+  Cameras:
+    type: array
+    items:
+      $ref: '#/definitions/Camera'
+  History:
+    type: object
+    properties:
+      historyid:
+        type: integer
+        format: int64
+        example: '0'
+      cameraid:
+        type: integer
+        format: int64
+        example: '0'
+      areaid:
+        type: integer
+        format: int64
+        example: '0'
+      filename:
+        type: string
+        example: test
+  Histories:
+    type: array
+    items:
+      $ref: '#/definitions/History'
+  Map:
+    type: object
+    properties:
+      mapid:
+        type: integer
+        format: int64
+        example: '0'
+      areaid:
+        type: integer
+        format: int64
+        example: '0'
+      map:
+        type: string
+        format: uri
+        example: >-
+          http://r.photo.store.qq.com/psb?/V11ZRoyG3eakT8/1z1zHYx*yzKWfVMWEEg72i027GZ4L*qwaYfpAVZt*bc!/r/dN4AAAAAAAAA
+  Maps:
+    type: array
+    items:
+      $ref: '#/definitions/Map'
+externalDocs:
+  description: Find out more about GETS
+  url: 'https://github.com/jry-king/SE-Summer-Project'

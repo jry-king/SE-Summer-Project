@@ -15,28 +15,28 @@ public class HistoryController {
     @Autowired
     private HistoryService historyService;
 
-    @GetMapping("/history")
+    @GetMapping("/history/areaid/{areaid}")
     @ResponseBody
-    public List<HistoryEntity> findByAreaid(@RequestParam("areaid")Integer areaid){
+    public List<HistoryEntity> getHistoryByAreaid(@PathVariable Integer areaid){
         return historyService.findByAreaid(areaid);
     }
 
     @GetMapping("/history/all")
     @ResponseBody
-    public List<HistoryEntity> findAll(){
+    public List<HistoryEntity> getAllHistory(){
         return historyService.findAll();
     }
 
-    @PostMapping(value = "/history/save",consumes = "Application/json")
+    @PostMapping(value = "/history",consumes = "Application/json")
     @ResponseBody
-    public HistoryEntity save(@RequestBody HistoryEntity historyEntity){
+    public HistoryEntity saveHistory(@RequestBody HistoryEntity historyEntity){
         return historyService.save(historyEntity);
     }
 
-    @DeleteMapping(value = "/history/delete")
+    @DeleteMapping(value = "/history/historyid/{historyid}")
     @Transactional
     @ResponseBody
-    public void deleteByCameraid(@RequestParam("historyid")Integer historyid){
+    public void deleteHistoryByCameraid(@PathVariable Integer historyid){
         historyService.deleteByHistoryid(historyid);
     }
 }

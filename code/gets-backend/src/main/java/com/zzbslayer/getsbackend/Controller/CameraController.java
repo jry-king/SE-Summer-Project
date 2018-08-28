@@ -17,26 +17,26 @@ public class CameraController {
 
     @GetMapping(value = "/camera/all")
     @ResponseBody
-    public List<CamerasEntity> findAll(){
+    public List<CamerasEntity> getAllCamera(){
         return cameraService.findAll();
     }
 
-    @GetMapping(value = "/camera")
+    @GetMapping(value = "/camera/areaid/{areaid}")
     @ResponseBody
-    public List<CamerasEntity> findByAreaid(@RequestParam("areaid")Integer areaid){
+    public List<CamerasEntity> getCameraByAreaid(@PathVariable Integer areaid){
         return cameraService.findByAreaid(areaid);
     }
 
-    @PostMapping(value = "/camera/save",consumes = "Application/json")
+    @PostMapping(value = "/camera",consumes = "Application/json")
     @ResponseBody
-    public CamerasEntity save(@RequestBody CamerasEntity camerasEntity){
+    public CamerasEntity saveCamera(@RequestBody CamerasEntity camerasEntity){
         return cameraService.save(camerasEntity);
     }
 
-    @DeleteMapping(value = "/camera/delete")
+    @DeleteMapping(value = "/camera/cameraid/{cameraid}")
     @Transactional
     @ResponseBody
-    public void deleteByCameraid(@RequestParam("cameraid")Integer cameraid){
+    public void deleteCameraByCameraid(@PathVariable Integer cameraid){
         cameraService.deleteByCameraid(cameraid);
     }
 }

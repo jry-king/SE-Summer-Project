@@ -1,11 +1,45 @@
+/* host */
+const dataHost = "http://localhost:8081"
+const videoHost = "http://localhost:8080"
+const pythonHost = "http://localhost:5000"
+
 /* api */
-export const hlsServer = "http://47.106.8.44:8080/live/"
-export const videoServer = "http://47.106.8.44/vod/"
-export const dataApi = "http://47.106.8.44:8081/api/"
-export const pyApi = "http://localhost:5000/"
+export const videoApi = {
+    hlsServer : videoHost + "/live",
+    videoServer :  videoHost + "/vod"
+}
+
+export const pyApi = {
+    searchFromStream : pythonHost + "/stream",
+    searchFromHistory : pythonHost + "/history"
+}
+
+const baseUrl = "/api"
+const dataApi = dataHost + baseUrl
+export const cameraApi = {
+    getAllCamera : dataApi + "/camera/all",
+    getCameraByAreaid : dataApi + "/camera/areaid",
+    deleteCameraByCameraid : dataApi + "/camera/cameraid",
+    saveCamera : dataApi + "/camera"
+}
+
+export const historyApi = {
+    getHistoryByAreaid : dataApi + "/history/areaid",
+    deleteHistoryByHistoryid : dataApi + "/history/historyid",
+    saveHistory : dataApi + "/history"
+}
+
+export const mapApi = {
+    getAllMap : dataApi + "/map/all",
+    getMapByAreaid : dataApi + "/map/areaid",
+    deleteMapByMapid : dataApi + "/map/mapid",
+    saveMap : dataApi + "/map"
+}
 
 /* url */ 
-export const homeUrl = "/home"
-export const liveVideoUrl = "/video/live"
-export const historyVideoUrl = "/video/history"
-export const managementUrl = "/management"
+export const url = {
+    home : "/home",
+    liveVideo : "/video/live",
+    historyVideo : "/video/history",
+    management : "/management"
+}

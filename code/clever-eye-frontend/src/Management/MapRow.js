@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Button, Input, message} from 'antd'
-import { dataApi } from '../Global'
+import { mapApi } from '../Global'
 
 class MapRow extends Component {
     constructor(props){
@@ -16,7 +16,7 @@ class MapRow extends Component {
         }
     }
     handleDelete = () => {
-        this.props.deleteMap(this.props.map.areaid)
+        this.props.deleteMap(this.props.map.mapid)
     }
 
     handleEdit = () => {
@@ -46,7 +46,7 @@ class MapRow extends Component {
                 "map":this.state.map,
                 "areaid":this.state.areaid
             }
-            fetch(dataApi+"map/save", {
+            fetch(mapApi.saveMap, {
                 method: 'post',
                 credentials: 'include',
                 headers: {

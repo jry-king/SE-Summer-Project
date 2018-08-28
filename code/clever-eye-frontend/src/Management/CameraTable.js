@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { dataApi } from '../Global'
+import { cameraApi } from '../Global'
 import { message } from 'antd'
 import { Icon,Form, Table, Input, Button, Popconfirm } from 'antd';
 
@@ -223,7 +223,7 @@ class CameraTable extends Component{
                 "areaid":target.areaid
             }
 
-            fetch(dataApi+"camera/save", {
+            fetch(cameraApi.saveCamera, {
                 method: 'post',
                 credentials: 'include',
                 headers: {
@@ -263,7 +263,7 @@ class CameraTable extends Component{
     }
 
     getCamera = () => {
-        fetch(dataApi + "camera/all",{
+        fetch(cameraApi.getAllCamera, {
             method: 'get',
             credentials: 'include'
         })
@@ -286,7 +286,7 @@ class CameraTable extends Component{
     }
 
     deleteCamera = (cameraid) => {
-        fetch(dataApi + "camera/delete?cameraid=" + cameraid,{
+        fetch(cameraApi.deleteCameraByCameraid + "/" + cameraid,{
             method:'delete',
             credentials: 'include'
         })
@@ -320,7 +320,7 @@ class CameraTable extends Component{
 					let msg = values;
 					msg['cameraid'] = 0;
 				
-				fetch(dataApi+"camera/save", {
+				fetch(cameraApi.saveCamera, {
 					method: 'post',
 					credentials: 'include',
 					headers: {
