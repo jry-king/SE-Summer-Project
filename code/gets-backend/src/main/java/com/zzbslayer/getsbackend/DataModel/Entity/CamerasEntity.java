@@ -13,6 +13,20 @@ public class CamerasEntity {
     private String y;
     private int areaid;
 
+    public CamerasEntity(){}
+
+    public CamerasEntity(Integer cameraid, String param1, String param2, String param3, String x, String y, Integer areaid){
+        this.setCameraid(cameraid);
+        this.setParam1(param1);
+        this.setParam2(param2);
+        this.setParam3(param3);
+        this.setX(x);
+        this.setY(y);
+        this.setAreaid(areaid);
+    }
+
+
+
     @Id
     @Column(name = "cameraid", nullable = false)
     public int getCameraid() {

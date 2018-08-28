@@ -16,28 +16,28 @@ public class MapController {
     @Autowired
     MapService mapService;
 
-    @GetMapping(value="/map")
+    @GetMapping(value="/map/areaid/{areaid}")
     @ResponseBody
-    public MapEntity findByAreaid(@RequestParam("areaid")Integer areaid){
+    public MapEntity getMapByAreaid(@PathVariable Integer areaid){
         return mapService.findByAreaid(areaid);
     }
 
     @GetMapping(value="/map/all")
     @ResponseBody
-    public List<MapEntity> findAll(){
+    public List<MapEntity> getAllMap(){
         return mapService.findAll();
     }
 
-    @PostMapping(value="/map/save")
+    @PostMapping(value="/map")
     @ResponseBody
-    public MapEntity save(@RequestBody MapEntity mapEntity){
+    public MapEntity saveMap(@RequestBody MapEntity mapEntity){
         return mapService.save(mapEntity);
     }
 
-    @DeleteMapping(value="/map/delete")
+    @DeleteMapping(value="/map/mapid/{mapid}")
     @Transactional
     @ResponseBody
-    public void deleteByMapid(@RequestParam("mapid")Integer mapid) {
+    public void deleteMapByMapid(@PathVariable Integer mapid) {
         mapService.deleteByMapid(mapid);
     }
 
