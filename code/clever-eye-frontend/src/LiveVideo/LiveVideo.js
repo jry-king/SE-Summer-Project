@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { dataApi, hlsServer } from '../Global';
+import { cameraApi, mapApi, videoApi } from '../Global';
 import { Icon, Button, Select, message, Row, Col } from 'antd'
 import Header from '../Utils/Header'
 import Map from '../Utils/Map'
@@ -40,7 +40,7 @@ class LiveVideo extends Component {
     }
 
     getCamera = () => {
-        fetch(dataApi + "camera/all",{
+        fetch(cameraApi.getAllCamera, {
             method: 'get',
             credentials: 'include'
         })
@@ -75,7 +75,7 @@ class LiveVideo extends Component {
     }
 
     getMap = () => {
-        fetch(dataApi + "map/all",{
+        fetch(mapApi.getAllMap ,{
             method: 'get',
             credentials: 'include'
         })
@@ -106,7 +106,7 @@ class LiveVideo extends Component {
 
     render() {
         const camera = this.props.match.params.camera
-        const videoUrl = hlsServer + camera
+        const videoUrl = videoApi.hlsServer + camera
         const chosenCamera = this.state.chosenCamera
         const chosenArea = this.state.chosenArea
         const map = this.chosenMap(this.state.maps, chosenArea)

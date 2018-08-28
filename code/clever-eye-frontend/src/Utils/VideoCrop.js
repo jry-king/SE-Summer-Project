@@ -58,8 +58,8 @@ class VideoCrop extends Component {
         message.loading('Searching...', 0)
         
         let msg = "img="+encodeURIComponent(this.state.image)
-        let uri = this.state.value
-        fetch(pyApi + uri, {
+        let option = this.state.value
+        fetch(option==="stream" ? pyApi.searchFromStream : pyApi.searchFromHistory, {
             method: 'post',
             mode:'cors',
             credentials: 'include',

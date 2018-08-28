@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { dataApi } from '../Global'
+import { mapApi } from '../Global'
 import MapRow from './MapRow'
 import { message, Button, Input, Row, Col } from 'antd'
 
@@ -22,7 +22,7 @@ class MapManagement extends Component{
     }
 
     getMaps = () => {
-        fetch(dataApi+"map/all", {
+        fetch(mapApi.getAllMap, {
             method: 'get',
             credentials: 'include'
         })
@@ -45,14 +45,13 @@ class MapManagement extends Component{
 
 
     deleteMap = (mapid) => {
-        fetch(dataApi + "map/delete?mapid=" + mapid,{
+        fetch(mapApi.deleteMapByMapid + "/" + mapid,{
             method:'delete',
             credentials: 'include'
         })
-        .then(res => res.json())
         .then(
             (result) => {
-                if (result.status)
+                if (result.status !== 200)
                     message.error(result.message)
                 else{
                     let maps = this.state.maps
@@ -81,7 +80,7 @@ class MapManagement extends Component{
                 "areaid":this.state.areaid
             }
 
-            fetch(dataApi+"map/save", {
+            fetch(mapApi.saveMap, {
                 method: 'post',
                 credentials: 'include',
                 headers: {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { dataApi, videoServer} from '../Global';
+import { cameraApi, mapApi, historyApi, videoApi} from '../Global';
 import { Icon, Button, Select, message, Row, Col } from 'antd'
 import Header from '../Utils/Header'
 import Map from '../Utils/Map'
@@ -34,7 +34,7 @@ class HistoryVideo extends Component {
     }
 
     getCamera = () => {
-        fetch(dataApi + "camera/all",{
+        fetch(cameraApi.getAllCamera, {
             method: 'get',
             credentials: 'include'
         })
@@ -72,7 +72,7 @@ class HistoryVideo extends Component {
     }
 
     getMap = () => {
-        fetch(dataApi + "map/all",{
+        fetch(mapApi.getAllMap ,{
             method: 'get',
             credentials: 'include'
         })
@@ -94,7 +94,7 @@ class HistoryVideo extends Component {
     }
 
     getHistory = () => {
-        fetch(dataApi + "history?areaid=1",{
+        fetch(historyApi.getHistoryByAreaid + "/1",{
             method: 'get',
             credentials: 'include'
         })
@@ -214,7 +214,7 @@ class HistoryVideo extends Component {
     render() {
         const file = this.props.match.params.file
 
-        const videoUrl = videoServer + decodeURIComponent(file)
+        const videoUrl = videoApi.videoServer + decodeURIComponent(file)
         const history = this.state.targetHistory
 
         /* all cameras data  */
