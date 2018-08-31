@@ -9,6 +9,7 @@ import time
 import subprocess as sp
 import base64
 from flask_cors import *
+from flask_prometheus import monitor
 from io import BytesIO
 from tripletreid.reid import calcreid
 import csv
@@ -133,6 +134,7 @@ def video():
 
 
 if __name__ == '__main__':
+    monitor(app, port=8000)
     port = 5000
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
