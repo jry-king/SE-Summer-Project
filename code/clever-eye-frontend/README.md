@@ -16,3 +16,5 @@ ffmpeg -f avfoundation -framerate 30 -i "0" -target pal-vcd ./hello.mpg -f flv r
 ```sh
 http://{server-ip}/live/{instance-name + '.m3u8'}
 ```
+
+- use nginx-prometheus to export metric data
