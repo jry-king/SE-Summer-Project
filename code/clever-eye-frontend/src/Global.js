@@ -1,6 +1,7 @@
 /* host */
-const dataHost = "http://localhost:8081"
-const videoHost = "http://localhost:8080"
+const host = "http://47.106.8.44"
+const dataHost = host + ":8081"
+const videoHost = host + ":8080"
 const pythonHost = "http://localhost:5000"
 
 /* api */
