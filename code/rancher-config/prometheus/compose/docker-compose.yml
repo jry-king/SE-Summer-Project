@@ -1,0 +1,16 @@
+version: '2'
+services:
+  Prometheus:
+    image: prom/prometheus
+    stdin_open: true
+    external_links:
+    - GetsFrontend/website-loadbalance:gets-frontend
+    - Mysql-Prometheus/mysqld-exporter:mysql
+    - GetsBackend/backend-loadbalance:gets-backend
+    volumes:
+    - /root/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    tty: true
+    ports:
+    - 9090:9090/tcp
+    labels:
+      io.rancher.container.pull_image: always
