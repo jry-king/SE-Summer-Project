@@ -25,7 +25,7 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - localhost:9104
+    - 172.16.10.70:9104
 
 - job_name: gets-frontend
   scrape_interval: 15s
@@ -34,7 +34,7 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - localhost:9527
+    - 172.16.10.70:9527
 
 - job_name: gets-backend
   scrape_interval: 15s
@@ -43,4 +43,4 @@ scrape_configs:
   scheme: http
   static_configs:
   - targets:
-    - localhost:8081
+    - 172.16.10.70:8081
