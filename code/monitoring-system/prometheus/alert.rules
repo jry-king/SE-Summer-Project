@@ -41,30 +41,64 @@ groups:
 
 - name: containers
   rules:
-  - alert: jenkins_down
-    expr: absent(container_memory_usage_bytes{name="jenkins"})
+  - alert: frontend_down
+    expr: absent(container_memory_usage_bytes{name="gets-frontend"})
     for: 30s
     labels:
       severity: critical
     annotations:
-      summary: "Jenkins down"
-      description: "Jenkins container is down for more than 30 seconds."
+      summary: "gets-frontend down"
+      description: "gets-frontend container is down for more than 30 seconds."
 
-  - alert: jenkins_high_cpu
-    expr: sum(rate(container_cpu_usage_seconds_total{name="jenkins"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
+  - alert: frontend_high_cpu
+    expr: sum(rate(container_cpu_usage_seconds_total{name="gets-frontend"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
     for: 30s
     labels:
       severity: warning
     annotations:
-      summary: "Jenkins high CPU usage"
-      description: "Jenkins CPU usage is {{ humanize $value}}%."
+      summary: "gets-frontend high CPU usage"
+      description: "gets-frontend CPU usage is {{ humanize $value}}%."
 
-  - alert: jenkins_high_memory
-    expr: sum(container_memory_usage_bytes{name="jenkins"}) > 1200000000
+  - alert: frontend_high_memory
+    expr: sum(container_memory_usage_bytes{name="gets-frontend"}) > 1200000000
     for: 30s
     labels:
       severity: warning
     annotations:
-      summary: "Jenkins high memory usage"
-      description: "Jenkins memory consumption is at {{ humanize $value}}."
+      summary: "gets-frontend high memory usage"
+      description: "gets-frontend memory consumption is at {{ humanize $value}}."
+
+  - alert: backend_down
+    expr: absent(container_memory_usage_bytes{name="gets-backend"})
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "gets-backend down"
+      description: "gets-backend container is down for more than 30 seconds."
+
+  - alert: backend_high_cpu
+    expr: sum(rate(container_cpu_usage_seconds_total{name="gets-backend"}[1m])) / count(node_cpu_seconds_total{mode="system"}) * 100 > 10
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "gets-backend high CPU usage"
+      description: "gets-backend CPU usage is {{ humanize $value}}%."
+
+  - alert: backend_high_memory
+    expr: sum(container_memory_usage_bytes{name="gets-backend"}) > 1200000000
+    for: 30s
+    labels:
+      severity: warning
+    annotations:
+      summary: "gets-backend high memory usage"
+      description: "gets-backend memory consumption is at {{ humanize $value}}."
+
+  - alert: node_exporter_down
+    expr: up{job="nodeexporter"} == 0
+    for: 15s
+    annotations:
+      summary: "node-exporter down"
+      description: "node-exporter container is down for more than 15 seconds."
 

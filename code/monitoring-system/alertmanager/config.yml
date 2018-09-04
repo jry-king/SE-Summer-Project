@@ -1,11 +1,10 @@
 route:
-    receiver: 'slack'
+  receiver: 'wechat'
 
 receivers:
-    - name: 'slack'
-      slack_configs:
-          - send_resolved: true
-            text: "{{ .CommonAnnotations.description }}"
-            username: 'Prometheus'
-            channel: '#<channel-name>'
-            api_url: 'https://hooks.slack.com/services/<webhook-id>'
+- name: 'wechat'
+  wechat_configs:
+  - corp_id: 'wwdb5b242a5347daca'
+    to_user: '@all'
+    agent_id: '1000002'
+    api_secret: 'CoavS7peylxeB4-ExZntNyV6QeUmwKJYv6MCKRvsngk'
