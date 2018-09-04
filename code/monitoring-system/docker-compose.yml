@@ -10,42 +10,6 @@ volumes:
 
 services:
 
-  elasticsearch:
-    image: elasticsearch:2
-    container_name: elasticsearch
-    volumes: 
-      - ./data:/usr/share/elasticsearch/data
-      - ./elasticsearch/jvm.options:/usr/share/elasticsearch/config/jvm.options
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  kibana:
-    image: kibana:4
-    container_name: kibana
-    expose:
-      - 5601
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  myfluentd:
-    image: zzbslayer/myfluentd
-    container_name: myfluentd
-    volumes: 
-      - ./fluentd:/fluentd/log
-      - ./fluent/fluent.conf:/fluentd/etc/fluent.conf
-    expose: 
-      - 24224
-    networks:
-      - monitor-net
-    environment: 
-      - FLUENTD_CONF=fluent.conf
-    labels:
-      org.label-schema.group: "monitoring"
-
   prometheus:
     image: prom/prometheus:v2.3.2
     container_name: prometheus
@@ -161,9 +125,6 @@ services:
       - "12451:9090"
       - "12452:9093"
       - "12453:9091"
-      - "5601:5601"
-      - "24224:24224"
-      - "24224:24224/udp"
 
     volumes:
       - ./caddy/:/etc/caddy/

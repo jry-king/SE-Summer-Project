@@ -1,18 +1,22 @@
 version: '2'
 services:
-  gets-nginx:
+  gets-frontend:
     image: zzbslayer/gets-frontend:latest
+    ports:
+    - 80:80/tcp
+    - 9527:9527/tcp
     volumes:
     - /root/website/logs:/var/log/nginx
     - /root/video:/opt/video
     labels:
       io.rancher.container.pull_image: always
-  website-loadbalance:
-    image: rancher/lb-service-haproxy:v0.9.1
+  
+  gets-backend:
+    image: zzbslayer/gets-backend:v1.0
     ports:
-    - 80:80/tcp
-    - 9527:9527/tcp
+    - 8081:8081/tcp
+    environment:
+    - FLUENTD_HOST=47.106.8.44
+    - FLUENTD_PORT=24224
     labels:
-      io.rancher.container.agent.role: environmentAdmin,agent
-      io.rancher.container.agent_service.drain_provider: 'true'
-      io.rancher.container.create_agent: 'true'
+      io.rancher.container.pull_image: always

@@ -28,28 +28,8 @@
     tls off
 }
 
-:5601 {
-    basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
-    proxy / kibana:5601 {
-            transparent
-        }
-
-    errors stderr
-    tls off
-}
-
 :3000 {
     proxy / grafana:3000 {
-            transparent
-            websocket
-        }
-
-    errors stderr
-    tls off
-}
-
-:24224 {
-    proxy / myfluentd:24224 {
             transparent
             websocket
         }
