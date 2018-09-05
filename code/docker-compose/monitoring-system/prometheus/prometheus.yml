@@ -35,31 +35,28 @@ scrape_configs:
       - targets: ['pushgateway:9091']
 
   - job_name: mysql
-    scrape_interval: 15s
-    scrape_timeout: 10s
+    scrape_interval: 5s
     metrics_path: /metrics
     scheme: http
     static_configs:
     - targets:
-      - 172.16.10.70:9104
+      - 47.106.8.44:9104
 
   - job_name: gets-frontend
-    scrape_interval: 15s
-    scrape_timeout: 10s
+    scrape_interval: 5s
     metrics_path: /metrics
     scheme: http
     static_configs:
     - targets:
-      - 172.16.10.70:9527
+      - 47.106.8.44:9527
 
   - job_name: gets-backend
-    scrape_interval: 15s
-    scrape_timeout: 10s
+    scrape_interval: 5s
     metrics_path: /actuator/prometheus
     scheme: http
     static_configs:
     - targets:
-      - 172.16.10.70:8081
+      - 47.106.8.44:8081
 
 
 alerting:
@@ -78,3 +75,13 @@ alerting:
 #    scrape_interval: 10s
 #    static_configs:
 #      - targets: ['eventlog-proxy:5000', 'eventlog:5000']
+
+# - job_name: 'nodeexporter-jp'
+#   scrape_interval: 5s
+#   static_configs:
+#     - targets: ['118.27.4.45:9100']
+
+# - job_name: 'cadvisor-jp'
+#   scrape_interval: 5s
+#   static_configs:
+#     - targets: ['118.27.4.45:8080']
