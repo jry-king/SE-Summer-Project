@@ -10,6 +10,12 @@ services:
     - /root/video:/opt/video
     labels:
       io.rancher.container.pull_image: always
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 47.106.8.44:24224
+        fluentd-async-connect: 'true'
+        tag: nginx.gets-frontend
   
   gets-backend:
     image: zzbslayer/gets-backend:v1.0
