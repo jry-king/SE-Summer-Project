@@ -180,7 +180,6 @@ class VideoCrop extends Component {
                                 </td>:<td width={400}/>
                             }
                         </tr>
-                        <br/>
                         <tr>
                             <td>
                                 <RadioGroup onChange={this.onChange} value={this.state.value}>
