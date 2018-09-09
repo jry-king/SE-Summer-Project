@@ -1,0 +1,15 @@
+version: '2'
+services:
+  nginx-rtmp:
+    image: alfg/nginx-rtmp:latest
+    stdin_open: true
+    tty: true
+    ports:
+    - 1935:1935/tcp
+    - 8080:80/tcp
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: 47.106.8.44:24224
+        fluentd-async-connect: 'true'
+        tag: nginx.video
