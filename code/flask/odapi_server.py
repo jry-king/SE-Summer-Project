@@ -38,6 +38,7 @@ category_index = label_map_util.create_category_index(categories)
 
 def detect(cameraid, image,csvFile,index):
     origin=copy(image)
+    #dataset = np.empty(shape=[0,2])
     img_size=[len(image[0]),len(image)]
     csvfile = open(csvFile,'a')
     writer = csv.writer(csvfile)
@@ -73,6 +74,8 @@ def detect(cameraid, image,csvFile,index):
                     #else: # dealing with history video
                     #    relativePath = 'gallery_history/'+str(index+1)+'-'+str(j)+'.jpg'
                     resultFileName=os.getcwd()+'/' +relativePath
+                    #x=np.append(x,[[index+1,str(cameraid)+'-'+str(index+1)+'-'+str(j)+'.jpg']],axis=0)
+                    #x=np.append(x,[[index+1,str(cameraid)+'-'+str(index+1)+'-'+str(j)+'.jpg']],axis=0)
                     writer.writerow([index+1,str(cameraid)+'-'+str(index+1)+'-'+str(j)+'.jpg'])
                     writer.writerow([index+1,str(cameraid)+'-'+str(index+1)+'-'+str(j)+'.jpg'])
                     img.save(resultFileName)
