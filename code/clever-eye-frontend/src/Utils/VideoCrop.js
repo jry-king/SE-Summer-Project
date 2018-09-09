@@ -99,6 +99,7 @@ class VideoCrop extends Component {
     }
     
     render(){
+        //this.props.live?console.log(this.props.videoUrl + ".m3u8"):console.log(this.props.videoUrl + ".mp4")
         return(
             <div className='monitorImage'>
                 <h2 >监控画面</h2>
