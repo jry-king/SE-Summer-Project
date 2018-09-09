@@ -1,0 +1,12 @@
+version: '2'
+services:
+  mysqld-exporter:
+    image: prom/mysqld-exporter
+    environment:
+      DATA_SOURCE_NAME: root:dsgwzd826525@(47.106.8.44:3306)/
+    stdin_open: true
+    tty: true
+    ports:
+    - 9104:9104/tcp
+    labels:
+      io.rancher.container.pull_image: always
