@@ -106,7 +106,7 @@ class LiveVideo extends Component {
 
     render() {
         const camera = this.props.match.params.camera
-        const videoUrl = videoApi.hlsServer + camera
+        const videoUrl = videoApi.hlsServer + "/" + camera
         const chosenCamera = this.state.chosenCamera
         const chosenArea = this.state.chosenArea
         const map = this.chosenMap(this.state.maps, chosenArea)

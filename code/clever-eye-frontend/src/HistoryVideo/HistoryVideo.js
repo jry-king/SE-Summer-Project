@@ -214,7 +214,7 @@ class HistoryVideo extends Component {
     render() {
         const file = this.props.match.params.file
 
-        const videoUrl = videoApi.videoServer + decodeURIComponent(file)
+        const videoUrl = videoApi.videoServer + "/" + decodeURIComponent(file)
         const history = this.state.targetHistory
 
         /* all cameras data  */
