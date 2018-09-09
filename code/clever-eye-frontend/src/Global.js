@@ -1,13 +1,14 @@
 /* host */
 const host = "http://47.106.8.44"
+const staticHost = host
 const dataHost = host + ":8081"
-const videoHost = host + ":8080"
+const liveHost = host + ":8080"
 const pythonHost = "http://localhost:5000"
 
 /* api */
 export const videoApi = {
-    hlsServer : videoHost + "/live",
-    videoServer :  videoHost + "/vod"
+    hlsServer : liveHost + "/live",
+    staticServer :  staticHost + "/vod"
 }
 
 export const pyApi = {
